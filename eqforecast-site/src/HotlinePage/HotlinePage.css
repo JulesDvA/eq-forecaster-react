@@ -1,0 +1,161 @@
+/* Hotline Page Styles */
+.hotline-page-container {
+  min-height: 100vh;
+  background-color: white;
+}
+
+/* Header Styles (shared) */
+.header {
+  background-color: #115e59;
+  color: white;
+  padding: 16px 24px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 14px;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #d1d5db;
+}
+
+.nav-item.active {
+  color: #d1d5db;
+}
+
+.forecast-btn {
+  background-color: #d97706;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.forecast-btn:hover {
+  background-color: #b45309;
+}
+
+/* Hotlines Main Content */
+.hotlines-main {
+  background-color: #115e59;
+  color: white;
+  min-height: calc(100vh - 72px);
+}
+
+.hotlines-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.hotlines-title {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.hotlines-list {
+  margin-bottom: 64px;
+}
+
+.hotline-section {
+  margin-bottom: 32px;
+}
+
+.hotline-category {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.hotline-subcategory {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.hotline-numbers {
+  font-size: 14px;
+  line-height: 1.6;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.hotline-entries {
+  margin-bottom: 8px;
+}
+
+.hotline-entry {
+  font-size: 14px;
+  line-height: 1.4;
+  color: white;
+  margin-bottom: 4px;
+}
+
+/* Bottom CTA Section */
+.bottom-cta {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.cta-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.cta-subtitle {
+  color: #d1d5db;
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+.cta-btn {
+  background-color: #d97706;
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.cta-btn:hover {
+  background-color: #b45309;
+}
+
+.disclaimer {
+  text-align: center;
+  font-size: 14px;
+  color: #9ca3af;
+}

@@ -3,7 +3,7 @@ import "./LandingPage.css";
 
 const LandingPage = ({ navigateToPage }) => {
   return (
-    <div className="page1-container">
+    <div className="landing-page-container">
       {/* Header */}
       <div className="header">
         <div className="header-content">
