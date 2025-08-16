@@ -21,7 +21,12 @@ const HotlinePage = ({ navigateToPage }) => {
             >
               Hotlines
             </button>
-            <button className="nav-item">Awareness</button>
+            <button
+              onClick={() => navigateToPage(2)}
+              className="nav-item active"
+            >
+              Awareness
+            </button>
             <button className="forecast-btn">Forecast Now</button>
           </div>
         </div>
