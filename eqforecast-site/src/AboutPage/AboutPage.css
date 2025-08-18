@@ -1,5 +1,6 @@
 /* About Page Styles */
 .about-page-container {
+  font-family: Inter, sans-serif;
   min-height: 100vh;
   background-color: white;
 }

@@ -1,5 +1,7 @@
 import React from "react";
 import "./LandingPage.css";
+import map from "./map.png";
+import eq_visual from "./eq_visual.png";
 
 const LandingPage = ({ navigateToPage }) => {
   return (
@@ -47,7 +49,7 @@ const LandingPage = ({ navigateToPage }) => {
       <div className="landing-page-hero-section">
         <h1 className="landing-page-hero-title">OPAL Earthquake Forecasting</h1>
         <p className="landing-page-hero-subtitle">
-          Regional Earthquake Forecasting in the PH Modelling Attention-Driven
+          Earthquake Forecasting in the Philippines Modelling Attention-Driven
           LSTM
         </p>
         <button
@@ -62,7 +64,7 @@ const LandingPage = ({ navigateToPage }) => {
       <div className="landing-page-map-section">
         <div className="landing-page-map-container">
           <img
-            src="/api/placeholder/1200/400"
+            src={map}
             alt="Philippines Map"
             className="landing-page-map-image"
           />
@@ -77,24 +79,26 @@ const LandingPage = ({ navigateToPage }) => {
               Earthquake Forecasting
             </h2>
             <p className="landing-page-content-paragraph">
-              Body text for your whole article or post. We'll put in some lorem
-              ipsum to show how a filled-out page might look.
+              Earthquake forecasting uses historical seismic data and artificial
+              intelligence to identify patterns in earthquake frequency,
+              magnitude, and location. While it cannot predict the exact time or
+              epicenter of an event, it provides valuable insights into regional
+              seismic risks.
             </p>
             <p className="landing-page-content-paragraph">
-              Excepteur efficient emerging, minim veniam anim aute carefully
-              curated Ginza conversation exquisite perfect nostrud nisi
-              intricate Content. Qui international first-class nulla ut.
-              Punctual adipiscing, essential lovely queen tempor eiusmod irure.
-              Exclusive izakaya charming Scandinavian impeccable aute quality of
-              life soft power pariatur Melbourne consectetur discerning. Qui
-              wardrobe aliquip, et Porter destination Toto remarkable officia
-              Helsinki excepteur Basset hound. ZÃ¼rich sleepy perfect
-              consectetur.
+              By leveraging advanced models such as Long Short-Term Memory
+              (LSTM) networks with attention mechanisms and spatial binning
+              techniques, forecasting systems can detect hidden patterns in
+              complex datasets. These forecasts support disaster preparedness,
+              guide urban planning, and strengthen resilience by helping
+              communities and policymakers anticipate potential seismic hazards.
+              Ultimately, earthquake forecasting bridges science and technology
+              to provide data-driven solutions for safer societies.
             </p>
           </div>
           <div className="landing-page-content-image-container">
             <img
-              src="/api/placeholder/400/250"
+              src={eq_visual}
               alt="Earthquake visualization"
               className="landing-page-content-image"
             />
@@ -108,7 +112,7 @@ const LandingPage = ({ navigateToPage }) => {
           Want to know more about the model?
         </h2>
         <p className="landing-page-cta-subtitle">
-          Regional Earthquake Forecasting in the PH Modelling Attention-Driven
+          Earthquake Forecasting in the Philippines Modelling Attention-Driven
           LSTM
         </p>
         <div className="landing-page-cta-buttons">
