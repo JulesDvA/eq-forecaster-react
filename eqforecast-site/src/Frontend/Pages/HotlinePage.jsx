@@ -1,5 +1,5 @@
 import React from "react";
-import "./HotlinePage.css";
+import "../Css/HotlinePage.css";
 
 const HotlinePage = ({ navigateToPage }) => {
   return (

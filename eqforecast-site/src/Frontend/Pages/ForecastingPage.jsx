@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "./Forecasting.css";
+import "../Css/Forecasting.css";
 
 const ForecastPage = ({ navigateToPage }) => {
   const [inputYear, setInputYear] = useState("");
@@ -267,5 +267,25 @@ const ForecastPage = ({ navigateToPage }) => {
     </div>
   );
 };
+
+async function getPrediction(input) {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input)  // e.g. { latitude, longitude, depth, year }
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    console.log("Predicted magnitude:", data.predicted_magnitude);
+    return data.predicted_magnitude;
+  } catch (error) {
+    console.error("Error fetching prediction:", error);
+  }
+}
 
 export default ForecastPage;

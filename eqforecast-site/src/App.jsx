@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import LandingPage from "./LandingPage/LandingPage";
-import AboutPage from "./AboutPage/AboutPage";
-import HotlinePage from "./HotlinePage/HotlinePage";
-import AwarenessPage from "./AwarenessPage/AwarenessPage";
-import ForecastPage from "./ForecastingPage/ForecastingPage";
+import LandingPage from "./Frontend/Pages/LandingPage";
+import AwarenessPage from "./Frontend/Pages/AwarenessPage";
+import AboutPage from "./Frontend/Pages/AboutPage";
+import HotlinePage from "./Frontend/Pages/HotlinePage";
+import ForecastPage from "./Frontend/Pages/ForecastingPage";
+
 const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
 

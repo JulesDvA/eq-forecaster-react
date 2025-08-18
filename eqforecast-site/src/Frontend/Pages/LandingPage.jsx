@@ -1,7 +1,7 @@
 import React from "react";
-import "./LandingPage.css";
-import map from "./map.png";
-import eq_visual from "./eq_visual.png";
+import "../Css/LandingPage.css";
+import map from "../Pics/map.png";
+import eq_visual from "../Pics/eq_visual.png";
 
 const LandingPage = ({ navigateToPage }) => {
   return (

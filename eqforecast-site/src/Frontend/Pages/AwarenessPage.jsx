@@ -1,5 +1,5 @@
 import React from "react";
-import "./AwarenessPage.css";
+import "../Css/AwarenessPage.css";
 
 const AwarenessPage = ({ navigateToPage }) => {
   return (
