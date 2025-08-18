@@ -1,17 +1,18 @@
 /* Landing Page Styles */
 .landing-page-container {
+  font-family: Inter, sans-serif;
   min-height: 100vh;
   background-color: white;
 }
 
-/* Header Styles */
-.header {
-  background-color: #115e59;
+/* Landing Page Header Styles */
+.landing-page-header {
+  background-color: #102d30;
   color: white;
   padding: 16px 24px;
 }
 
-.header-content {
+.landing-page-header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,19 +20,20 @@
   margin: 0 auto;
 }
 
-.logo {
-  font-size: 24px;
+.landing-page-logo {
+  font-size: 30px;
   font-weight: bold;
 }
 
-.nav-menu {
+.landing-page-nav-menu {
+  font-weight:normal;
   display: flex;
   align-items: center;
   gap: 24px;
   font-size: 14px;
 }
 
-.nav-item {
+.landing-page-nav-item {
   background: none;
   border: none;
   color: white;
@@ -39,16 +41,16 @@
   transition: color 0.3s ease;
 }
 
-.nav-item:hover {
+.landing-page-nav-item:hover {
   color: #d1d5db;
 }
 
-.nav-item.active {
+.landing-page-nav-item.active {
   color: #d1d5db;
 }
 
-.forecast-btn {
-  background-color: #d97706;
+.landing-page-forecast-btn {
+  background-color: #8abcbb;
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
@@ -57,30 +59,32 @@
   transition: background-color 0.3s ease;
 }
 
-.forecast-btn:hover {
-  background-color: #b45309;
+.landing-page-forecast-btn:hover {
+  background-color: #547272;
 }
 
-/* Hero Section */
-.hero-section {
+/* Landing Page Hero Section */
+.landing-page-hero-section {
   text-align: center;
   padding: 64px 24px;
 }
 
-.hero-title {
+.landing-page-hero-title {
   font-size: 48px;
   font-weight: bold;
-  color: #115e59;
+  color: #102d30;
   margin-bottom: 16px;
 }
 
-.hero-subtitle {
+.landing-page-hero-subtitle {
+  font-weight: normal;
   color: #6b7280;
   margin-bottom: 32px;
 }
 
-.hero-cta-btn {
-  background-color: #115e59;
+.landing-page-hero-cta-btn {
+  font-weight: lighter;
+  background-color: #102d30;
   color: white;
   padding: 12px 32px;
   border-radius: 4px;
@@ -89,35 +93,35 @@
   transition: background-color 0.3s ease;
 }
 
-.hero-cta-btn:hover {
-  background-color: #134e4a;
+.landing-page-hero-cta-btn:hover {
+  background-color: #547272;
 }
 
-/* Map Section */
-.map-section {
+/* Landing Page Map Section */
+.landing-page-map-section {
   position: relative;
 }
 
-.map-container {
+.landing-page-map-container {
   width: 100%;
   height: 384px;
   background-color: #d1d5db;
   overflow: hidden;
 }
 
-.map-image {
+.landing-page-map-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Content Section */
-.content-section {
+/* Landing Page Content Section */
+.landing-page-content-section {
   padding: 64px 24px;
   background-color: #f3f4f6;
 }
 
-.content-grid {
+.landing-page-content-grid {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
@@ -127,25 +131,26 @@
 }
 
 @media (min-width: 1024px) {
-  .content-grid {
+  .landing-page-content-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-.content-title {
+.landing-page-content-title {
   font-size: 32px;
   font-weight: bold;
   color: #1f2937;
   margin-bottom: 24px;
 }
 
-.content-paragraph {
+.landing-page-content-paragraph {
+  font-weight: 300;
   color: #6b7280;
   line-height: 1.6;
   margin-bottom: 16px;
 }
 
-.content-image-container {
+.landing-page-content-image-container {
   background-color: white;
   height: 256px;
   border-radius: 8px;
@@ -155,41 +160,43 @@
   justify-content: center;
 }
 
-.content-image {
+.landing-page-content-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 8px;
 }
 
-/* Bottom CTA Section */
-.bottom-cta {
-  background-color: #115e59;
+/* Landing Page Bottom CTA Section */
+.landing-page-bottom-cta {
+  background-color: #102d30;
   color: white;
-  padding: 64px 24px;
+  padding: 64px ;
   text-align: center;
 }
 
-.cta-title {
+.landing-page-cta-title {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 16px;
 }
 
-.cta-subtitle {
+.landing-page-cta-subtitle {
+  font-weight: normal;
   color: #d1d5db;
   margin-bottom: 32px;
 }
 
-.cta-buttons {
+.landing-page-cta-buttons {
+  font-weight: lighter;
   display: flex;
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.cta-btn-secondary {
-  background-color: #0f766e;
+.landing-page-cta-btn-secondary {
+  background-color: #8abcbb;
   padding: 12px 24px;
   border-radius: 4px;
   border: none;
@@ -198,12 +205,12 @@
   transition: background-color 0.3s ease;
 }
 
-.cta-btn-secondary:hover {
-  background-color: #0d9488;
+.landing-page-cta-btn-secondary:hover {
+  background-color: #547272;
 }
 
-.cta-btn-primary {
-  background-color: #d97706;
+.landing-page-cta-btn-primary {
+  background-color: #6c6559;
   padding: 12px 24px;
   border-radius: 4px;
   border: none;
@@ -212,12 +219,16 @@
   transition: background-color 0.3s ease;
 }
 
-.cta-btn-primary:hover {
-  background-color: #b45309;
+.landing-page-cta-btn-primary:hover {
+  background-color: #4d4b3f;
 }
 
-.disclaimer {
-  margin-top: 64px;
+.landing-page-disclaimer {
+  background-color: white;
+  font-weight: 200;
+  padding: 10px;
+  text-align: center;
+  margin-top: 40px;
   font-size: 14px;
-  color: #9ca3af;
+  color:#4d4b3f;
 }

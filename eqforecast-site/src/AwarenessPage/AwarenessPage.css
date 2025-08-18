@@ -4,7 +4,7 @@
   background-color: white;
 }
 
-/* Header Styles */
+/* Awareness Page Header Styles */
 .awareness-page-header {
   background-color: #115e59;
   color: white;
@@ -24,14 +24,14 @@
   font-weight: bold;
 }
 
-.nav-menu {
+.awareness-page-nav-menu {
   display: flex;
   align-items: center;
   gap: 24px;
   font-size: 14px;
 }
 
-.nav-item {
+.awareness-page-nav-item {
   background: none;
   border: none;
   color: white;
@@ -39,15 +39,15 @@
   transition: color 0.3s ease;
 }
 
-.nav-item:hover {
+.awareness-page-nav-item:hover {
   color: #d1d5db;
 }
 
-.nav-item.active {
+.awareness-page-nav-item.active {
   color: #d1d5db;
 }
 
-.forecast-btn {
+.awareness-page-forecast-btn {
   background-color: #d97706;
   padding: 8px 16px;
   border-radius: 4px;
@@ -57,19 +57,19 @@
   transition: background-color 0.3s ease;
 }
 
-.forecast-btn:hover {
+.awareness-page-forecast-btn:hover {
   background-color: #b45309;
 }
 
 /* Hero Section */
-.awareness-pagehero-section {
+.awareness-page-hero-section {
   background-color: #6b5b73;
   color: white;
   text-align: center;
   padding: 48px 24px;
 }
 
-.hero-title {
+.awareness-page-hero-title {
   font-size: 36px;
   font-weight: bold;
   max-width: 1000px;
@@ -78,13 +78,13 @@
 }
 
 @media (max-width: 768px) {
-  .hero-title {
+  .awareness-page-hero-title {
     font-size: 24px;
   }
 }
 
 /* Section Styles */
-.section-title {
+.awareness-page-section-title {
   font-size: 32px;
   font-weight: bold;
   color: #1f2937;
@@ -92,51 +92,51 @@
   font-style: italic;
 }
 
-.subsection-title {
+.awareness-page-subsection-title {
   font-size: 18px;
   font-weight: bold;
   color: #1f2937;
   margin-bottom: 12px;
 }
 
-.scenario-title {
+.awareness-page-scenario-title {
   font-size: 16px;
   font-weight: bold;
   color: #1f2937;
   margin-bottom: 8px;
 }
 
-.info-list {
+.awareness-page-info-list {
   list-style: disc;
   margin-left: 20px;
   margin-bottom: 24px;
 }
 
-.info-list li {
+.awareness-page-info-list li {
   color: #374151;
   line-height: 1.6;
   margin-bottom: 4px;
 }
 
-.numbered-list {
+.awareness-page-numbered-list {
   list-style: decimal;
   margin-left: 20px;
   margin-bottom: 16px;
 }
 
-.numbered-list li {
+.awareness-page-numbered-list li {
   color: #374151;
   line-height: 1.6;
   margin-bottom: 4px;
 }
 
 /* Before Section */
-.before-section {
+.awareness-page-before-section {
   background-color: #f9fafb;
   padding: 64px 24px;
 }
 
-.before-grid {
+.awareness-page-before-grid {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
@@ -145,12 +145,12 @@
 }
 
 @media (min-width: 768px) {
-  .before-grid {
+  .awareness-page-before-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-.before-column {
+.awareness-page-before-column {
   background-color: white;
   padding: 32px;
   border-radius: 8px;
@@ -158,13 +158,13 @@
 }
 
 /* During Section */
-.during-section {
+.awareness-page-during-section {
   background-color: #6b5b73;
   color: white;
   padding: 64px 24px;
 }
 
-.during-content {
+.awareness-page-during-content {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
@@ -174,60 +174,60 @@
 }
 
 @media (min-width: 1024px) {
-  .during-content {
+  .awareness-page-during-content {
     grid-template-columns: 2fr 1fr;
   }
 }
 
-.drop-cover-hold {
+.awareness-page-drop-cover-hold {
   margin-bottom: 32px;
 }
 
-.during-scenarios {
+.awareness-page-during-scenarios {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
 }
 
 @media (min-width: 768px) {
-  .during-scenarios {
+  .awareness-page-during-scenarios {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-.scenario {
+.awareness-page-scenario {
   background-color: rgba(255, 255, 255, 0.1);
   padding: 24px;
   border-radius: 8px;
 }
 
-.during-section .section-title {
+.awareness-page-during-section .awareness-page-section-title {
   color: white;
 }
 
-.during-section .subsection-title {
+.awareness-page-during-section .awareness-page-subsection-title {
   color: white;
 }
 
-.during-section .scenario-title {
+.awareness-page-during-section .awareness-page-scenario-title {
   color: white;
 }
 
-.during-section .info-list li {
+.awareness-page-during-section .awareness-page-info-list li {
   color: #e5e7eb;
 }
 
-.during-section .numbered-list li {
+.awareness-page-during-section .awareness-page-numbered-list li {
   color: #e5e7eb;
 }
 
-.during-image {
+.awareness-page-during-image {
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
 
-.demo-image {
+.awareness-page-demo-image {
   width: 100%;
   max-width: 400px;
   height: auto;
@@ -236,12 +236,12 @@
 }
 
 /* After Section */
-.after-section {
+.awareness-page-after-section {
   background-color: white;
   padding: 64px 24px;
 }
 
-.after-grid {
+.awareness-page-after-grid {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
@@ -250,25 +250,25 @@
 }
 
 @media (min-width: 768px) {
-  .after-grid {
+  .awareness-page-after-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (min-width: 1024px) {
-  .after-grid {
+  .awareness-page-after-grid {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
 
-.after-item {
+.awareness-page-after-item {
   background-color: #f9fafb;
   padding: 24px;
   border-radius: 8px;
   border-left: 4px solid #115e59;
 }
 
-.after-number {
+.awareness-page-after-number {
   font-size: 16px;
   font-weight: bold;
   color: #115e59;
@@ -276,25 +276,25 @@
 }
 
 /* Bottom CTA Section */
-.bottom-cta {
+.awareness-page-bottom-cta {
   background-color: #6b5b73;
   color: white;
   padding: 64px 24px;
   text-align: center;
 }
 
-.cta-title {
+.awareness-page-cta-title {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 16px;
 }
 
-.cta-subtitle {
+.awareness-page-cta-subtitle {
   color: #d1d5db;
   margin-bottom: 32px;
 }
 
-.cta-buttons {
+.awareness-page-cta-buttons {
   display: flex;
   gap: 16px;
   justify-content: center;
@@ -302,7 +302,7 @@
   margin-bottom: 64px;
 }
 
-.cta-btn-secondary {
+.awareness-page-cta-btn-secondary {
   background-color: #0f766e;
   padding: 12px 24px;
   border-radius: 4px;
@@ -312,11 +312,11 @@
   transition: background-color 0.3s ease;
 }
 
-.cta-btn-secondary:hover {
+.awareness-page-cta-btn-secondary:hover {
   background-color: #0d9488;
 }
 
-.cta-btn-primary {
+.awareness-page-cta-btn-primary {
   background-color: #d97706;
   padding: 12px 24px;
   border-radius: 4px;
@@ -326,11 +326,11 @@
   transition: background-color 0.3s ease;
 }
 
-.cta-btn-primary:hover {
+.awareness-page-cta-btn-primary:hover {
   background-color: #b45309;
 }
 
-.disclaimer {
+.awareness-page-disclaimer {
   font-size: 14px;
   color: #9ca3af;
 }

@@ -4,14 +4,14 @@
   background-color: #f8fafc;
 }
 
-/* Header Styles (reusing from LandingPage) */
-.header {
+/* Forecast Page Header Styles */
+.forecast-page-header {
   background-color: #115e59;
   color: white;
   padding: 16px 24px;
 }
 
-.header-content {
+.forecast-page-header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,19 +19,19 @@
   margin: 0 auto;
 }
 
-.logo {
+.forecast-page-logo {
   font-size: 24px;
   font-weight: bold;
 }
 
-.nav-menu {
+.forecast-page-nav-menu {
   display: flex;
   align-items: center;
   gap: 24px;
   font-size: 14px;
 }
 
-.nav-item {
+.forecast-page-nav-item {
   background: none;
   border: none;
   color: white;
@@ -39,15 +39,15 @@
   transition: color 0.3s ease;
 }
 
-.nav-item:hover {
+.forecast-page-nav-item:hover {
   color: #d1d5db;
 }
 
-.nav-item.active {
+.forecast-page-nav-item.active {
   color: #d1d5db;
 }
 
-.forecast-btn {
+.forecast-page-forecast-btn {
   background-color: #d97706;
   padding: 8px 16px;
   border-radius: 4px;
@@ -57,22 +57,22 @@
   transition: background-color 0.3s ease;
 }
 
-.forecast-btn:hover {
+.forecast-page-forecast-btn:hover {
   background-color: #b45309;
 }
 
-.forecast-btn.active {
+.forecast-page-forecast-btn.active {
   background-color: #b45309;
 }
 
 /* Main Content Layout */
-.forecast-content {
+.forecast-page-content {
   display: flex;
   height: calc(100vh - 80px);
 }
 
 /* Sidebar Styles */
-.sidebar {
+.forecast-page-sidebar {
   width: 320px;
   background-color: #115e59;
   color: white;
@@ -80,18 +80,18 @@
   overflow-y: auto;
 }
 
-.input-section {
+.forecast-page-input-section {
   margin-bottom: 32px;
 }
 
-.input-label {
+.forecast-page-input-label {
   display: block;
   margin-bottom: 8px;
   font-size: 14px;
   font-weight: 500;
 }
 
-.year-input {
+.forecast-page-year-input {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #374151;
@@ -101,28 +101,28 @@
   font-size: 14px;
 }
 
-.year-input::placeholder {
+.forecast-page-year-input::placeholder {
   color: #9ca3af;
 }
 
-.year-input:focus {
+.forecast-page-year-input:focus {
   outline: none;
   border-color: #d97706;
   box-shadow: 0 0 0 1px #d97706;
 }
 
 /* Forecast Table */
-.forecast-table-section {
+.forecast-page-table-section {
   margin-bottom: 32px;
 }
 
-.table-title {
+.forecast-page-table-title {
   font-size: 16px;
   margin-bottom: 16px;
   font-weight: 600;
 }
 
-.forecast-table {
+.forecast-page-table {
   width: 100%;
   border-collapse: collapse;
   background-color: #0f766e;
@@ -130,7 +130,7 @@
   overflow: hidden;
 }
 
-.forecast-table th {
+.forecast-page-table th {
   background-color: #134e4a;
   padding: 8px 12px;
   text-align: left;
@@ -140,43 +140,43 @@
   letter-spacing: 0.05em;
 }
 
-.forecast-table td {
+.forecast-page-table td {
   padding: 8px 12px;
   border-bottom: 1px solid #115e59;
   font-size: 14px;
 }
 
-.forecast-table tr:last-child td {
+.forecast-page-table tr:last-child td {
   border-bottom: none;
 }
 
 /* BIN Selection */
-.bin-selection-section {
+.forecast-page-bin-selection-section {
   background-color: #0f766e;
   padding: 24px;
   margin: 0 -24px -24px -24px;
   border-radius: 8px 8px 0 0;
 }
 
-.selection-title {
+.forecast-page-selection-title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
 }
 
-.bin-id-label {
+.forecast-page-bin-id-label {
   font-size: 14px;
   color: #d1d5db;
 }
 
 /* Map Area */
-.map-area {
+.forecast-page-map-area {
   flex: 1;
   position: relative;
   background-color: white;
 }
 
-.map-container {
+.forecast-page-map-container {
   height: calc(100% - 60px);
   position: relative;
   overflow: hidden;
@@ -207,7 +207,7 @@
 }
 
 /* Disclaimer */
-.forecasting-disclaimer {
+.forecast-page-disclaimer {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -221,38 +221,29 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .forecast-content {
+  .forecast-page-content {
     flex-direction: column;
     height: auto;
   }
   
-  .sidebar {
+  .forecast-page-sidebar {
     width: 100%;
     max-height: 400px;
   }
   
-  .map-area {
+  .forecast-page-map-area {
     height: 500px;
   }
 }
 
 @media (max-width: 768px) {
-  .header-content {
+  .forecast-page-header-content {
     flex-direction: column;
     gap: 16px;
   }
   
-  .nav-menu {
+  .forecast-page-nav-menu {
     flex-wrap: wrap;
     justify-content: center;
-  }
-  
-  .map-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-  }
-  
-  .marker-label {
-    font-size: 9px;
   }
 }
