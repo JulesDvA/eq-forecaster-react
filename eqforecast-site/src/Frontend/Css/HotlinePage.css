@@ -1,14 +1,16 @@
 /* Hotline Page Styles */
 .hotline-page-container {
+  font-family: Inter, sans-serif;
   min-height: 100vh;
   background-color: white;
 }
 
 /* Hotline Page Header Styles */
 .hotline-page-header {
-  background-color: #115e59;
+  background-color: #102d30;
   color: white;
   padding: 16px 24px;
+  border-color: white;
 }
 
 .hotline-page-header-content {
@@ -48,7 +50,7 @@
 }
 
 .hotline-page-forecast-btn {
-  background-color: #d97706;
+  background-color: #8abcbb;
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
@@ -58,12 +60,14 @@
 }
 
 .hotline-page-forecast-btn:hover {
-  background-color: #b45309;
+  background-color: #547272;
 }
 
 /* Hotlines Main Content */
 .hotline-page-main {
-  background-color: #115e59;
+  border-top: 4px solid white;
+  border-bottom: 4px solid white;
+  background-color: #102d30;
   color: white;
   min-height: calc(100vh - 72px);
 }
@@ -75,10 +79,11 @@
 }
 
 .hotline-page-title {
-  font-size: 36px;
+  font-size: 48px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 48px;
+  letter-spacing: 2px;
 }
 
 .hotline-page-list {
@@ -86,61 +91,84 @@
 }
 
 .hotline-page-section {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 20px;
+}
+
+.hotline-page-section:last-child {
+  border-bottom: none;
+}
+
+.hotline-page-section-header {
+  margin-bottom: 8px;
 }
 
 .hotline-page-category {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 8px;
   color: white;
+  line-height: 1.4;
+  margin: 0;
 }
 
 .hotline-page-subcategory {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 8px;
   color: white;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.hotline-page-section-content {
+  margin-top: 8px;
 }
 
 .hotline-page-numbers {
   font-size: 14px;
   line-height: 1.6;
   color: white;
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .hotline-page-entries {
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .hotline-page-entry {
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.5;
   color: white;
   margin-bottom: 4px;
+}
+
+.hotline-page-entry:last-child {
+  margin-bottom: 0;
 }
 
 /* Hotline Page Bottom CTA Section */
 .hotline-page-bottom-cta {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
+  padding: 32px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .hotline-page-cta-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
   margin-bottom: 16px;
 }
 
 .hotline-page-cta-subtitle {
   color: #d1d5db;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   font-size: 14px;
+  line-height: 1.4;
 }
 
 .hotline-page-cta-btn {
-  background-color: #d97706;
+  background-color: #8abcbb;
   padding: 12px 24px;
   border-radius: 4px;
   border: none;
@@ -148,14 +176,17 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-size: 16px;
+  font-weight: 500;
 }
 
 .hotline-page-cta-btn:hover {
-  background-color: #b45309;
+  background-color: #547272;
 }
 
 .hotline-page-disclaimer {
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #9ca3af;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }

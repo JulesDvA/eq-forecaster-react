@@ -71,13 +71,13 @@
   height: calc(100vh - 80px);
 }
 
-/* Sidebar Styles */
+/* Sidebar Styles - Updated to match the image design */
 .forecast-page-sidebar {
-  width: 320px;
-  background-color: #115e59;
-  color: white;
-  padding: 24px;
+  width: 380px;
+  background-color: white;
+  padding: 24px 24px 40px 24px;
   overflow-y: auto;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
 .forecast-page-input-section {
@@ -86,19 +86,21 @@
 
 .forecast-page-input-label {
   display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
 }
 
 .forecast-page-year-input {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #374151;
-  border-radius: 4px;
-  background-color: #374151;
-  color: white;
-  font-size: 14px;
+  padding: 12px 16px;
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  color: #374151;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 .forecast-page-year-input::placeholder {
@@ -107,8 +109,9 @@
 
 .forecast-page-year-input:focus {
   outline: none;
-  border-color: #d97706;
-  box-shadow: 0 0 0 1px #d97706;
+  border-color: #115e59;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(17, 94, 89, 0.1);
 }
 
 /* Forecast Table */
@@ -117,56 +120,48 @@
 }
 
 .forecast-page-table-title {
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 16px;
   font-weight: 600;
+  color: #374151;
+  text-align: center;
 }
 
 .forecast-page-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #0f766e;
-  border-radius: 4px;
+  background-color: white;
+  border-radius: 8px;
   overflow: hidden;
+  border: 2px solid #e5e7eb;
 }
 
 .forecast-page-table th {
-  background-color: #134e4a;
-  padding: 8px 12px;
-  text-align: left;
-  font-size: 12px;
+  background-color: #115e59;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  color: white;
 }
 
 .forecast-page-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid #115e59;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
   font-size: 14px;
+  text-align: center;
+  color: #374151;
+  font-weight: 500;
 }
 
 .forecast-page-table tr:last-child td {
   border-bottom: none;
 }
 
-/* BIN Selection */
-.forecast-page-bin-selection-section {
-  background-color: #0f766e;
-  padding: 24px;
-  margin: 0 -24px -24px -24px;
-  border-radius: 8px 8px 0 0;
-}
-
-.forecast-page-selection-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 16px;
-}
-
-.forecast-page-bin-id-label {
-  font-size: 14px;
-  color: #d1d5db;
+.forecast-page-table tbody tr:hover {
+  background-color: #f9fafb;
 }
 
 /* Map Area */
@@ -212,7 +207,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(17, 94, 89, 0.9);
+  background-color: rgba(17, 94, 89, 0.95);
   color: white;
   padding: 16px 24px;
   text-align: center;
@@ -245,5 +240,9 @@
   .forecast-page-nav-menu {
     flex-wrap: wrap;
     justify-content: center;
+  }
+  
+  .forecast-page-sidebar {
+    padding: 16px;
   }
 }

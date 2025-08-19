@@ -189,11 +189,6 @@ const ForecastPage = ({ navigateToPage }) => {
               </tbody>
             </table>
           </div>
-
-          <div className="forecast-page-bin-selection-section">
-            <h3 className="forecast-page-selection-title">Select a BIN</h3>
-            <div className="forecast-page-bin-id-label">BIN ID NO.</div>
-          </div>
         </div>
 
         {/* Main Map Area */}
@@ -273,7 +268,7 @@ async function getPrediction(input) {
     const response = await fetch("http://127.0.0.1:8000/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input)  // e.g. { latitude, longitude, depth, year }
+      body: JSON.stringify(input), // e.g. { latitude, longitude, depth, year }
     });
 
     if (!response.ok) {
