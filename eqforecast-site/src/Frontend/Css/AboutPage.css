@@ -7,7 +7,7 @@
 
 /* About Page Header Styles */
 .about-page-header {
-  background-color: #115e59;
+  background-color: #102d30;
   color: white;
   padding: 16px 24px;
 }
@@ -21,11 +21,12 @@
 }
 
 .about-page-logo {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
 }
 
 .about-page-nav-menu {
+  font-weight:normal;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -49,7 +50,7 @@
 }
 
 .about-page-forecast-btn {
-  background-color: #d97706;
+  background-color: #8abcbb;
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
@@ -59,7 +60,7 @@
 }
 
 .about-page-forecast-btn:hover {
-  background-color: #b45309;
+  background-color: #547272;
 }
 
 /* About Page Main Content */
@@ -72,7 +73,7 @@
 .about-page-title {
   font-size: 36px;
   font-weight: bold;
-  color: #115e59;
+  color: #102d30;
   margin-bottom: 48px;
 }
 
@@ -125,7 +126,7 @@
 
 /* About Page Team Section */
 .about-page-team-section {
-  background-color: #115e59;
+  background-color: #102d30;
   color: white;
   margin: 0 -24px;
   padding: 64px 24px;
@@ -212,7 +213,7 @@
 .about-page-member-image-container {
   width: 80px;
   height: 80px;
-  background-color: #d1d5db;
+  background-color: #3d3b32;
   border-radius: 4px;
   flex-shrink: 0;
 }
