@@ -12,6 +12,9 @@ const App = () => {
     setCurrentPage(page);
   };
 
+
+  
+
   return (
     <div>
       {currentPage === 1 && <LandingPage navigateToPage={navigateToPage} />}
