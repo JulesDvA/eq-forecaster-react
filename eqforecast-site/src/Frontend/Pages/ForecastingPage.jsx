@@ -1,17 +1,43 @@
-import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polygon } from "react-leaflet";
+import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Polygon, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../Css/Forecasting.css";
 
 const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
   const [inputYear, setInputYear] = useState("");
-  const [forecastData, setForecastData] = useState([
-    { bin: 1, maxMag: "-", noOfEq: "-" },
-    { bin: 2, maxMag: "-", noOfEq: "-" },
-    { bin: 3, maxMag: "-", noOfEq: "-" },
-    { bin: 4, maxMag: "-", noOfEq: "-" },
-  ]);
+  const [spatialBins, setSpatialBins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Fetch spatial bins from backend
+  useEffect(() => {
+    const fetchSpatialBins = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("http://localhost:8000/api/spatial/bins");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setSpatialBins(data.bins || []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching spatial bins:", error);
+        setError("Failed to load spatial bins");
+        setLoading(false);
+      }
+    };
+
+    fetchSpatialBins();
+  }, []);
+
+  // Convert spatial bins to forecast data format
+  const forecastData = spatialBins.map(bin => ({
+    bin: bin.id,
+    maxMag: bin.max_magnitude > 0 ? bin.max_magnitude.toFixed(1) : "-",
+    noOfEq: bin.historical_earthquake_count || "-"
+  }));
 
   const goBack = () => {
     navigateToPage(3);
@@ -25,91 +51,22 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
     iconUrl:
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
     shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
   });
 
-  // Create custom icons
-  const cityIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
-  const alertIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
-  // Define earthquake forecast regions as polygons
-  const regions = [
-    {
-      name: "Northern Luzon",
-      risk: "low",
-      bin: 1,
-      color: "#22c55e",
-      positions: [
-        [18.5, 120.5],
-        [18.5, 122.0],
-        [16.5, 122.0],
-        [16.5, 120.5],
-      ],
-    },
-    {
-      name: "Central Luzon",
-      risk: "high",
-      bin: 2,
-      color: "#dc2626",
-      positions: [
-        [16.5, 120.0],
-        [16.5, 122.5],
-        [14.0, 122.5],
-        [14.0, 120.0],
-      ],
-    },
-    {
-      name: "Southern Luzon",
-      risk: "medium",
-      bin: 3,
-      color: "#a16207",
-      positions: [
-        [14.0, 120.5],
-        [14.0, 124.0],
-        [12.0, 124.0],
-        [12.0, 120.5],
-      ],
-    },
-    {
-      name: "Mindanao",
-      risk: "attention",
-      bin: 4,
-      color: "#9333ea",
-      positions: [
-        [10.0, 121.0],
-        [10.0, 126.5],
-        [5.0, 126.5],
-        [5.0, 121.0],
-      ],
-    },
-  ];
-
-  // City locations
-  const cities = [
-    { name: "Baguio", lat: 16.4023, lng: 120.5934 },
-    { name: "Angeles", lat: 15.145, lng: 120.586 },
-    { name: "Manila", lat: 14.5995, lng: 120.9842 },
-    { name: "Davao", lat: 7.0731, lng: 125.6085 },
-  ];
+  // Convert spatial bins to regions format for map display
+  const regions = spatialBins.map(bin => ({
+    id: bin.id,
+    name: bin.name,
+    risk: bin.risk_level.toLowerCase(),
+    bin: bin.id,
+    positions: bin.coordinates,
+    regionCode: bin.region_code,
+    riskScore: bin.risk_score,
+    historicalCount: bin.historical_earthquake_count,
+    avgMagnitude: bin.avg_magnitude,
+    maxMagnitude: bin.max_magnitude
+  }));
 
   const handleYearSubmit = () => {
     console.log("Generating forecast for year:", inputYear);
@@ -186,26 +143,43 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
 
           <div className="forecast-page-table-section">
             <h3 className="forecast-page-table-title">
-              Annual Forecast for the Year ----
+              Quadtree Spatial Bins ({spatialBins.length} total)
             </h3>
-            <table className="forecast-page-table">
-              <thead>
-                <tr>
-                  <th>BINS</th>
-                  <th>MAX MAG.</th>
-                  <th>NO. OF EQ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {forecastData.map((row, index) => (
-                  <tr key={index}>
-                    <td>BIN {row.bin}</td>
-                    <td>{row.maxMag}</td>
-                    <td>{row.noOfEq}</td>
+            
+            {loading && (
+              <div style={{ textAlign: 'center', padding: '20px' }}>
+                Loading spatial bins...
+              </div>
+            )}
+            
+            {error && (
+              <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
+                {error}
+              </div>
+            )}
+            
+            {!loading && !error && (
+              <table className="forecast-page-table">
+                <thead>
+                  <tr>
+                    <th>BIN ID</th>
+                    <th>MAX MAG.</th>
+                    <th>NO. OF EQ</th>
+                    <th>RISK</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {forecastData.map((row, index) => (
+                    <tr key={index}>
+                      <td>BIN {row.bin}</td>
+                      <td>{row.maxMag}</td>
+                      <td>{row.noOfEq}</td>
+                      <td>{spatialBins[index]?.risk_level || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 
@@ -228,47 +202,39 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
                   key={index}
                   positions={region.positions}
                   pathOptions={{
-                    fillColor: region.color,
-                    fillOpacity: 0.6,
-                    color: "#ffffff",
+                    fillColor: 'transparent',
+                    fillOpacity: 0,
+                    color: '#2563eb',
                     weight: 2,
+                    opacity: 0.8
                   }}
                 >
-                  <Popup>
-                    <div>
-                      <strong>{region.name}</strong>
-                      <br />
-                      Risk Level: {region.risk}
-                      <br />
-                      BIN: {region.bin}
+                  <Tooltip 
+                    permanent={false}
+                    direction="top"
+                    offset={[0, -10]}
+                    opacity={0.9}
+                    className="bin-tooltip"
+                  >
+                    <div style={{ 
+                      minWidth: '200px', 
+                      fontSize: '12px',
+                      lineHeight: '1.4'
+                    }}>
+                      <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                        {region.name}
+                      </div>
+                      <div><strong>BIN ID:</strong> {region.bin}</div>
+                      <div><strong>Region Code:</strong> {region.regionCode}</div>
+                      <div><strong>Risk Level:</strong> {region.risk}</div>
+                      <div><strong>Risk Score:</strong> {region.riskScore}</div>
+                      <div><strong>Historical Earthquakes:</strong> {region.historicalCount}</div>
+                      <div><strong>Avg Magnitude:</strong> {region.avgMagnitude > 0 ? region.avgMagnitude.toFixed(2) : 'N/A'}</div>
+                      <div><strong>Max Magnitude:</strong> {region.maxMagnitude > 0 ? region.maxMagnitude.toFixed(2) : 'N/A'}</div>
                     </div>
-                  </Popup>
+                  </Tooltip>
                 </Polygon>
               ))}
-
-              {/* City markers */}
-              {cities.map((city, index) => (
-                <Marker
-                  key={index}
-                  position={[city.lat, city.lng]}
-                  icon={cityIcon}
-                >
-                  <Popup>
-                    <strong>{city.name}</strong>
-                  </Popup>
-                </Marker>
-              ))}
-
-              {/* Special attention marker */}
-              <Marker position={[7.0731, 125.6085]} icon={alertIcon}>
-                <Popup>
-                  <div style={{ color: "#dc2626", fontWeight: "bold" }}>
-                    ⚠️ ATTENTION DEFICIT
-                    <br />
-                    Special monitoring required
-                  </div>
-                </Popup>
-              </Marker>
             </MapContainer>
           </div>
 

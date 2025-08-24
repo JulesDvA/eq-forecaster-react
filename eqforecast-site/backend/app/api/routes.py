@@ -11,6 +11,7 @@ from ..models.earthquake import (
 )
 from ..services.data_service import earthquake_service
 from ..services.ml_service import ml_service
+from ..services.spatial_service import spatial_bin_service
 
 # Create router
 router = APIRouter()
@@ -125,6 +126,59 @@ async def get_model_info():
         raise HTTPException(status_code=500, detail=f"Failed to fetch model info: {str(e)}")
 
 
+@router.get("/api/spatial/bins", summary="Get Spatial Bins", tags=["Spatial"])
+async def get_spatial_bins():
+    """Get all spatial earthquake prediction bins"""
+    try:
+        bins = spatial_bin_service.get_all_bins()
+        return bins
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial bins: {str(e)}")
+
+
+@router.get("/api/spatial/bins/{bin_id}", summary="Get Spatial Bin by ID", tags=["Spatial"])
+async def get_spatial_bin(bin_id: int):
+    """Get a specific spatial bin by ID"""
+    try:
+        bin_obj = spatial_bin_service.get_bin_by_id(bin_id)
+        if bin_obj is None:
+            raise HTTPException(status_code=404, detail=f"Spatial bin with ID {bin_id} not found")
+        return bin_obj
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial bin: {str(e)}")
+
+
+@router.get("/api/spatial/bins/risk/{risk_level}", summary="Get Spatial Bins by Risk Level", tags=["Spatial"])
+async def get_spatial_bins_by_risk(risk_level: str):
+    """Get spatial bins filtered by risk level"""
+    try:
+        # Convert string to enum
+        from ..models.spatial_bins import BinRiskLevel
+        try:
+            risk_enum = BinRiskLevel(risk_level.upper())
+        except ValueError:
+            raise HTTPException(status_code=400, detail=f"Invalid risk level: {risk_level}. Must be one of: LOW, MEDIUM, HIGH, CRITICAL")
+        
+        bins = spatial_bin_service.get_bins_by_risk_level(risk_enum)
+        return bins
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial bins by risk level: {str(e)}")
+
+
+@router.get("/api/spatial/info", summary="Get Spatial Binning Info", tags=["Spatial"])
+async def get_spatial_binning_info():
+    """Get information about the spatial binning system"""
+    try:
+        info = spatial_bin_service.get_binning_info()
+        return info
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial binning info: {str(e)}")
+
+
 @router.get("/api/status", summary="Get API Status", tags=["General"])
 async def get_api_status():
     """Get overall API status and readiness"""
@@ -135,14 +189,17 @@ async def get_api_status():
             "ml_model_ready": ml_service.is_model_loaded,
             "data_service_ready": True,
             "prediction_service_ready": True,
-            "development_phase": "Enhanced Backend Structure",
+            "spatial_binning_ready": True,
+            "development_phase": "Enhanced Backend Structure with Real Quadtree Bins",
             "features": {
                 "data_filtering": True,
                 "region_statistics": True,
                 "mock_predictions": True,
                 "real_ml_predictions": ml_service.is_model_loaded,
                 "confidence_intervals": True,
-                "historical_data": True
+                "historical_data": True,
+                "real_quadtree_bins": True,
+                "spatial_risk_assessment": True
             },
             "next_steps": [
                 "Implement real ML model training",
