@@ -2,257 +2,377 @@
 .forecast-page-container {
   min-height: 100vh;
   background-color: #f8fafc;
+  font-family: Inter, Sans-serif;
 }
 
-/* Header Styles (reusing from LandingPage) */
-.header {
-  background-color: #115e59;
+/* Forecast Page Header Styles */
+.forecast-page-header {
+  background-color: #102d30;
   color: white;
   padding: 16px 24px;
+  position: relative;
 }
 
-.header-content {
+.forecast-page-header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   max-width: 1280px;
   margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.logo {
+.forecast-page-logo {
   font-size: 24px;
   font-weight: bold;
 }
 
-.nav-menu {
+.forecast-page-nav-menu {
   display: flex;
   align-items: center;
   gap: 24px;
   font-size: 14px;
+  flex-wrap: wrap;
 }
 
-.nav-item {
+.forecast-page-nav-item {
   background: none;
   border: none;
   color: white;
   cursor: pointer;
   transition: color 0.3s ease;
+  padding: 8px 12px;
+  white-space: nowrap;
 }
 
-.nav-item:hover {
+.forecast-page-nav-item:hover {
   color: #d1d5db;
 }
 
-.nav-item.active {
+.forecast-page-nav-item.active {
   color: #d1d5db;
 }
 
-.forecast-btn {
-  background-color: #d97706;
+.forecast-page-forecast-btn {
+  background-color: #8abcbb;
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
 }
 
-.forecast-btn:hover {
-  background-color: #b45309;
+.forecast-page-forecast-btn:hover {
+  background-color: #547272;
 }
 
-.forecast-btn.active {
-  background-color: #0891b2;
+.forecast-page-forecast-btn.active {
+  background-color: #ff7b00;
+}
+
+/* Back Button */
+.forecast-page-back-btn {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.forecast-page-back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.forecast-page-back-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Admin Button */
+.forecast-page-admin-btn {
+  background-color: #dc2626;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.forecast-page-admin-btn:hover {
+  background-color: #b91c1c;
 }
 
 /* Main Content Layout */
-.forecast-content {
+.forecast-page-content {
   display: flex;
-  gap: 24px;
+  min-height: calc(100vh - 80px);
+}
+
+/* Sidebar Styles */
+.forecast-page-sidebar {
+  width: 380px;
+  background-color: white;
   padding: 24px;
-  max-width: 1280px;
-  margin: 0 auto;
+  overflow-y: auto;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Sidebar */
-.sidebar {
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.forecast-page-input-section {
+  margin-bottom: 32px;
 }
 
-/* Input Section */
-.input-section {
-  background: white;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.input-label {
+.forecast-page-input-label {
   display: block;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
-}
-
-.year-input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   font-size: 16px;
+  font-weight: 600;
+  color: #374151;
 }
 
-.year-input:focus {
-  outline: none;
-  border-color: #0891b2;
-  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
-}
-
-.train-btn {
+.forecast-page-year-input {
   width: 100%;
-  background-color: #059669;
-  color: white;
   padding: 12px 16px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.train-btn:hover {
-  background-color: #047857;
-}
-
-.train-btn:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
-
-.model-status {
-  margin-top: 16px;
-  padding: 12px;
-  background-color: #f3f4f6;
-  border-radius: 6px;
-  font-size: 14px;
-  color: #374151;
-}
-
-/* Forecast Table Section */
-.forecast-table-section {
-  background: white;
-  padding: 24px;
+  border: 2px solid #d1d5db;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #f9fafb;
+  color: #374151;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-.table-title {
+.forecast-page-year-input::placeholder {
+  color: #9ca3af;
+}
+
+.forecast-page-year-input:focus {
+  outline: none;
+  border-color: #102d30;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(17, 94, 89, 0.1);
+}
+
+/* Forecast Table */
+.forecast-page-table-section {
+  margin-bottom: 32px;
+}
+
+.forecast-page-table-title {
   font-size: 18px;
+  margin-bottom: 16px;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 16px;
+  text-align: center;
 }
 
-.forecast-table {
+.forecast-page-table {
   width: 100%;
   border-collapse: collapse;
-}
-
-.forecast-table th {
-  background-color: #f9fafb;
-  padding: 12px;
-  text-align: left;
-  font-weight: 600;
-  color: #374151;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.forecast-table td {
-  padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
-  color: #6b7280;
-}
-
-.forecast-table tr:hover {
-  background-color: #f9fafb;
-}
-
-/* Bin Selection Section */
-.bin-selection-section {
-  background: white;
-  padding: 24px;
+  background-color: white;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
 }
 
-.selection-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 16px;
-}
-
-.bin-id-label {
-  color: #6b7280;
+.forecast-page-table th {
+  background-color: #102d30;
+  padding: 12px 16px;
+  text-align: center;
   font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+}
+
+.forecast-page-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  text-align: center;
+  color: #374151;
+  font-weight: 500;
+}
+
+.forecast-page-table tr:last-child td {
+  border-bottom: none;
+}
+
+.forecast-page-table tbody tr:hover {
+  background-color: #f9fafb;
 }
 
 /* Map Area */
-.map-area {
+.forecast-page-map-area {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  background-color: white;
+}
+
+.forecast-page-map-container {
+  height: 100%;
+  position: relative;
   overflow: hidden;
 }
 
-.map-container {
-  flex: 1;
-  min-height: 600px;
-  position: relative;
+/* Leaflet popup customization */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.forecasting-disclaimer {
+.leaflet-popup-content {
+  margin: 12px 16px;
+  font-family: inherit;
+}
+
+/* Ensure map controls are visible */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: white !important;
+  border: none !important;
+  color: #374151 !important;
+  font-weight: bold !important;
+}
+
+/* Disclaimer */
+.forecast-page-disclaimer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(17, 94, 89, 0.95);
+  color: white;
   padding: 16px 24px;
-  background-color: #fef3c7;
-  color: #92400e;
   text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  border-top: 1px solid #fde68a;
+  font-size: 12px;
 }
 
 /* Responsive Design */
+@media (min-width: 768px) {
+  .forecast-page-back-btn {
+    left: calc((100vw - 1280px) / 2 + 24px);
+  }
+}
+
 @media (max-width: 1024px) {
-  .forecast-content {
+  .forecast-page-content {
     flex-direction: column;
+    height: auto;
   }
   
-  .sidebar {
+  .forecast-page-sidebar {
     width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .forecast-page-map-area {
+    height: 500px;
+    min-height: 500px;
+  }
+  
+  .forecast-page-map-container {
+    height: calc(100% - 60px);
   }
 }
 
 @media (max-width: 768px) {
-  .forecast-content {
-    padding: 16px;
-  }
-  
-  .input-section,
-  .forecast-table-section,
-  .bin-selection-section {
-    padding: 20px;
-  }
-  
-  .nav-menu {
+  .forecast-page-header-content {
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .forecast-page-back-btn {
+    left: 16px;
+    top: 16px;
+    transform: none;
+    position: absolute;
+  }
+  
+  .forecast-page-header {
+    padding: 60px 16px 16px;
+  }
+  
+  .forecast-page-logo {
+    font-size: 20px;
+  }
+  
+  .forecast-page-nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    font-size: 12px;
+  }
+  
+  .forecast-page-sidebar {
+    padding: 16px;
+    max-height: 350px;
+  }
+  
+  .forecast-page-map-area {
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .forecast-page-nav-menu {
+    gap: 8px;
+    font-size: 11px;
+  }
+  
+  .forecast-page-nav-item, .forecast-page-forecast-btn, .forecast-page-admin-btn {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+  
+  .forecast-page-sidebar {
+    padding: 12px;
+    max-height: 300px;
+  }
+  
+  .forecast-page-input-label {
+    font-size: 14px;
+  }
+  
+  .forecast-page-year-input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .forecast-page-table-title {
+    font-size: 16px;
+  }
+  
+  .forecast-page-table th,
+  .forecast-page-table td {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .forecast-page-map-area {
+    height: 350px;
   }
 }
