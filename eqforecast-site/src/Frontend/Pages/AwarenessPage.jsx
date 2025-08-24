@@ -7,34 +7,34 @@ const AwarenessPage = ({ navigateToPage }) => {
       {/* Header */}
       <div className="awareness-page-header">
         <div className="awareness-page-header-content">
-          <div className="awareness-page-logo">OPAL</div>
+          <div className="awareness-page-logo">Earthquake Forecasting</div>
           <div className="awareness-page-nav-menu">
             <button
-              onClick={() => navigateToPage(1)}
+              onClick={() => navigateToPage(3)}
               className="awareness-page-nav-item"
             >
               Overview
             </button>
             <button
-              onClick={() => navigateToPage(3)}
+              onClick={() => navigateToPage(5)}
               className="awareness-page-nav-item"
             >
               About
             </button>
             <button
-              onClick={() => navigateToPage(4)}
+              onClick={() => navigateToPage(6)}
               className="awareness-page-nav-item"
             >
               Hotlines
             </button>
             <button
-              onClick={() => navigateToPage(2)}
+              onClick={() => navigateToPage(4)}
               className="awareness-page-nav-item active"
             >
               Awareness
             </button>
             <button
-              onClick={() => navigateToPage(5)}
+              onClick={() => navigateToPage(7)}
               className="awareness-page-forecast-btn"
             >
               Forecast Now
@@ -259,13 +259,13 @@ const AwarenessPage = ({ navigateToPage }) => {
         </p>
         <div className="awareness-page-cta-buttons">
           <button
-            onClick={() => navigateToPage(3)}
+            onClick={() => navigateToPage(5)}
             className="awareness-page-cta-btn-secondary"
           >
             About
           </button>
           <button
-            onClick={() => navigateToPage(5)}
+            onClick={() => navigateToPage(7)}
             className="awareness-page-cta-btn-primary"
           >
             Forecast Now

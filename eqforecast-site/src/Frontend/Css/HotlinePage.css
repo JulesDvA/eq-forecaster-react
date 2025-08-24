@@ -11,6 +11,7 @@
   color: white;
   padding: 16px 24px;
   border-color: white;
+  position: relative;
 }
 
 .hotline-page-header-content {
@@ -19,6 +20,8 @@
   justify-content: space-between;
   max-width: 1280px;
   margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .hotline-page-logo {
@@ -31,6 +34,7 @@
   align-items: center;
   gap: 24px;
   font-size: 14px;
+  flex-wrap: wrap;
 }
 
 .hotline-page-nav-item {
@@ -39,6 +43,8 @@
   color: white;
   cursor: pointer;
   transition: color 0.3s ease;
+  padding: 8px 12px;
+  white-space: nowrap;
 }
 
 .hotline-page-nav-item:hover {
@@ -57,10 +63,57 @@
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
 }
 
 .hotline-page-forecast-btn:hover {
   background-color: #547272;
+}
+
+/* Back Button */
+.hotline-page-back-btn {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.hotline-page-back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.hotline-page-back-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Admin Button */
+.hotline-page-admin-btn {
+  background-color: #dc2626;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.hotline-page-admin-btn:hover {
+  background-color: #b91c1c;
 }
 
 /* Hotlines Main Content */
@@ -189,4 +242,95 @@
   color: #9ca3af;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .hotline-page-back-btn {
+    left: calc((100vw - 1280px) / 2 + 24px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hotline-page-header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .hotline-page-back-btn {
+    left: 16px;
+    top: 16px;
+    transform: none;
+    position: absolute;
+  }
+  
+  .hotline-page-header {
+    padding: 60px 16px 16px;
+  }
+  
+  .hotline-page-logo {
+    font-size: 20px;
+  }
+  
+  .hotline-page-nav-menu {
+    gap: 12px;
+    font-size: 12px;
+    justify-content: center;
+  }
+  
+  .hotline-page-content {
+    padding: 32px 16px;
+  }
+  
+  .hotline-page-title {
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+  
+  .hotline-page-category {
+    font-size: 16px;
+  }
+  
+  .hotline-page-subcategory {
+    font-size: 14px;
+  }
+  
+  .hotline-page-cta-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hotline-page-nav-menu {
+    gap: 8px;
+    font-size: 11px;
+  }
+  
+  .hotline-page-nav-item, .hotline-page-forecast-btn, .hotline-page-admin-btn {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+  
+  .hotline-page-title {
+    font-size: 24px;
+    letter-spacing: normal;
+  }
+  
+  .hotline-page-category {
+    font-size: 14px;
+  }
+  
+  .hotline-page-subcategory {
+    font-size: 13px;
+  }
+  
+  .hotline-page-numbers,
+  .hotline-page-entry {
+    font-size: 12px;
+  }
+  
+  .hotline-page-cta-btn {
+    width: 100%;
+    max-width: 300px;
+  }
 }

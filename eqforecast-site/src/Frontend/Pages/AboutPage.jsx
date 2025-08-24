@@ -2,44 +2,72 @@ import React from "react";
 import "../Css/AboutPage.css";
 import model from "../Pics/model.png";
 
-const AboutPage = ({ navigateToPage }) => {
+const AboutPage = ({ navigateToPage, isLoggedIn }) => {
+  const goBack = () => {
+    // Navigate to the previous page or landing page
+    navigateToPage(3);
+  };
+
   return (
     <div className="about-page-container">
       {/* Header */}
       <div className="about-page-header">
+        <button
+          onClick={goBack}
+          className="about-page-back-btn"
+          title="Go back"
+        >
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
         <div className="about-page-header-content">
-          <div className="about-page-logo">OPAL</div>
+          <div className="about-page-logo">Earthquake Forecasting</div>
           <div className="about-page-nav-menu">
             <button
-              onClick={() => navigateToPage(1)}
+              onClick={() => navigateToPage(3)}
               className="about-page-nav-item"
             >
               Overview
             </button>
             <button
-              onClick={() => navigateToPage(3)}
+              onClick={() => navigateToPage(5)}
               className="about-page-nav-item active"
             >
               About
             </button>
             <button
-              onClick={() => navigateToPage(4)}
+              onClick={() => navigateToPage(6)}
               className="about-page-nav-item"
             >
               Hotlines
             </button>
             <button
-              onClick={() => navigateToPage(2)}
+              onClick={() => navigateToPage(4)}
               className="about-page-nav-item"
             >
               Awareness
             </button>
             <button
-              onClick={() => navigateToPage(5)}
+              onClick={() => navigateToPage(7)}
               className="about-page-forecast-btn"
             >
               Forecast Now
             </button>
+            {isLoggedIn && (
+              <button
+                onClick={() => navigateToPage(2)}
+                className="about-page-admin-btn"
+              >
+                Admin
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -138,7 +166,7 @@ const AboutPage = ({ navigateToPage }) => {
                   irure. Exclusive izakaya charming Scandinavian impeccable aute
                   quality of life soft power pariatur Melbourne consectetur
                   discerning. Qui wardrobe aliquip, et Porter destination Toto
-                  remarkable officia Helsinki excepteur Basset hound. ZÃ¼rich
+                  remarkable officia Helsinki excepteur Basset hound. Zürich
                   sleepy perfect consectetur.
                 </p>
               </div>

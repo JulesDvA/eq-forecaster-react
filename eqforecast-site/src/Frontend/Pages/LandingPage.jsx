@@ -3,44 +3,71 @@ import "../Css/LandingPage.css";
 import map from "../Pics/map.png";
 import eq_visual from "../Pics/eq_visual.png";
 
-const LandingPage = ({ navigateToPage }) => {
+const LandingPage = ({ navigateToPage, isLoggedIn }) => {
+  const goBack = () => {
+    navigateToPage(1);
+  };
+
   return (
     <div className="landing-page-container">
       {/* Header */}
       <div className="landing-page-header">
+        <button
+          onClick={goBack}
+          className="landing-page-back-btn"
+          title="Go back"
+        >
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
         <div className="landing-page-header-content">
-          <div className="landing-page-logo">OPAL</div>
+          <div className="landing-page-logo">Earthquake Forecasting</div>
           <div className="landing-page-nav-menu">
             <button
-              onClick={() => navigateToPage(1)}
+              onClick={() => navigateToPage(3)}
               className="landing-page-nav-item active"
             >
               Overview
             </button>
             <button
-              onClick={() => navigateToPage(3)}
+              onClick={() => navigateToPage(5)}
               className="landing-page-nav-item"
             >
               About
             </button>
             <button
-              onClick={() => navigateToPage(4)}
+              onClick={() => navigateToPage(6)}
               className="landing-page-nav-item"
             >
               Hotlines
             </button>
             <button
-              onClick={() => navigateToPage(2)}
+              onClick={() => navigateToPage(4)}
               className="landing-page-nav-item"
             >
               Awareness
             </button>
             <button
-              onClick={() => navigateToPage(5)}
+              onClick={() => navigateToPage(7)}
               className="landing-page-forecast-btn"
             >
               Forecast Now
             </button>
+            {isLoggedIn && (
+              <button
+                onClick={() => navigateToPage(2)}
+                className="landing-page-admin-btn"
+              >
+                Admin
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -53,7 +80,7 @@ const LandingPage = ({ navigateToPage }) => {
           LSTM
         </p>
         <button
-          onClick={() => navigateToPage(5)}
+          onClick={() => navigateToPage(7)}
           className="landing-page-hero-cta-btn"
         >
           Forecast Now
@@ -117,13 +144,13 @@ const LandingPage = ({ navigateToPage }) => {
         </p>
         <div className="landing-page-cta-buttons">
           <button
-            onClick={() => navigateToPage(3)}
+            onClick={() => navigateToPage(5)}
             className="landing-page-cta-btn-secondary"
           >
             About
           </button>
           <button
-            onClick={() => navigateToPage(5)}
+            onClick={() => navigateToPage(7)}
             className="landing-page-cta-btn-primary"
           >
             Forecast Now

@@ -1,0 +1,130 @@
+/* Login Page Styles */
+.login-page-container {
+  font-family: Inter, sans-serif;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-page-content {
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+
+.login-page-form-container {
+  background-color: white;
+  padding: 48px 40px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.login-page-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #102d30;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-page-form {
+  margin-bottom: 24px;
+}
+
+.login-page-input-group {
+  margin-bottom: 24px;
+}
+
+.login-page-input-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.login-page-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  background-color: white;
+  color: #374151;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.login-page-input::placeholder {
+  color: #9ca3af;
+}
+
+.login-page-input:focus {
+  outline: none;
+  border-color: #102d30;
+  box-shadow: 0 0 0 3px rgba(16, 45, 48, 0.1);
+}
+
+.login-page-login-btn {
+  width: 100%;
+  background-color: #102d30;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 16px;
+}
+
+.login-page-login-btn:hover {
+  background-color: #0f3b3f;
+}
+
+.login-page-guest-btn {
+  width: 100%;
+  background-color: #6b7280;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-page-guest-btn:hover {
+  background-color: #4b5563;
+}
+
+.login-page-disclaimer {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 32px;
+  padding: 16px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-page-container {
+    padding: 16px;
+  }
+  
+  .login-page-form-container {
+    padding: 32px 24px;
+  }
+  
+  .login-page-title {
+    font-size: 28px;
+  }
+}
