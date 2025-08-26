@@ -4,14 +4,21 @@ import {
   addEarthquake, 
   deleteEarthquake, 
   updateEarthquake, 
-  subscribeToEarthquakes 
+  subscribeToEarthquakes,
+  getEarthquakes
 } from "../services/earthquakeService";
+import { testSupabaseConnection } from "../supabase";
+import { uploadAndProcessCSV } from "../services/csvUploadService";
+import { signOut, getCurrentUser } from "../services/authService";
 
-const Dashboard = ({ navigateToPage }) => {
+const Dashboard = ({ navigateToPage, onLogout }) => {
   const [earthquakeData, setEarthquakeData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [newEntry, setNewEntry] = useState({
     date: "",
@@ -20,15 +27,51 @@ const Dashboard = ({ navigateToPage }) => {
     depth: "",
     latitude: "",
     longitude: "",
-    description: "",
-    source: "manual_entry"
+    description: ""
   });
 
-  // Real-time data subscription
+  // Load initial data and set up real-time subscription
   useEffect(() => {
-    const unsubscribe = subscribeToEarthquakes((earthquakes) => {
-      setEarthquakeData(earthquakes);
-      setLoading(false);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        
+        // Check authentication
+        const user = await getCurrentUser();
+        if (!user) {
+          console.error('❌ No authenticated user found');
+          navigateToPage(2); // Go back to login
+          return;
+        }
+        
+        setCurrentUser(user);
+        console.log('✅ User authenticated:', user.email);
+        
+        const earthquakes = await getEarthquakes();
+        setEarthquakeData(earthquakes);
+      } catch (error) {
+        console.error('❌ Error loading earthquakes:', error);
+        setError('Failed to load earthquake data: ' + error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+
+    // Set up real-time subscription
+    const unsubscribe = subscribeToEarthquakes((payload) => {
+      console.log('🔄 Real-time update:', payload);
+      
+      if (payload.eventType === 'INSERT') {
+        setEarthquakeData(prev => [payload.new, ...prev]);
+      } else if (payload.eventType === 'DELETE') {
+        setEarthquakeData(prev => prev.filter(item => item.id !== payload.old.id));
+      } else if (payload.eventType === 'UPDATE') {
+        setEarthquakeData(prev => prev.map(item => 
+          item.id === payload.new.id ? payload.new : item
+        ));
+      }
     });
 
     return () => unsubscribe();
@@ -39,11 +82,72 @@ const Dashboard = ({ navigateToPage }) => {
     setNewEntry((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle CSV file upload
+  const handleCSVUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      alert('Please select a CSV file');
+      return;
+    }
+
+    setIsUploading(true);
+    setError(null);
+    setUploadProgress('Starting upload...');
+
+    try {
+      console.log('📁 Processing CSV file:', file.name);
+      setUploadProgress('Uploading to Supabase Storage...');
+      
+      // Upload and process CSV
+      const result = await uploadAndProcessCSV(file);
+      
+      console.log('✅ CSV processing complete:', result);
+      setUploadProgress('Adding earthquake entries to database...');
+      
+      // Add valid earthquake entries to database
+      let addedCount = 0;
+      let errorCount = 0;
+      
+      for (const earthquake of result.data) {
+        try {
+          await addEarthquake(earthquake);
+          addedCount++;
+        } catch (error) {
+          console.error('❌ Error adding earthquake:', error);
+          errorCount++;
+        }
+      }
+      
+      // Show results
+      const message = `CSV processed successfully!\n\n` +
+        `📁 File: ${result.storage.fileName}\n` +
+        `📊 Total rows: ${result.parsing.totalRows}\n` +
+        `✅ Valid rows: ${result.parsing.validRows}\n` +
+        `❌ Error rows: ${result.parsing.errorRows}\n` +
+        `💾 Added to database: ${addedCount}\n` +
+        `🚫 Database errors: ${errorCount}`;
+      
+      alert(message);
+      
+      // Reset file input
+      e.target.value = '';
+      
+    } catch (error) {
+      console.error('❌ CSV upload error:', error);
+      setError(`CSV upload failed: ${error.message}`);
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(null);
+    }
+  };
+
   const addEarthquakeEntry = async (e) => {
     e.preventDefault();
     console.log('📝 Form submitted with data:', newEntry);
     
-    // Check only required fields (excluding description which is optional)
+    // Check required fields
     const requiredFields = ['date', 'magnitude', 'location', 'depth', 'latitude', 'longitude'];
     const hasAllRequired = requiredFields.every(field => newEntry[field] !== "");
     
@@ -74,8 +178,7 @@ const Dashboard = ({ navigateToPage }) => {
           depth: "",
           latitude: "",
           longitude: "",
-          description: "",
-          source: "manual_entry"
+          description: ""
         });
 
         // Show success message
@@ -83,8 +186,7 @@ const Dashboard = ({ navigateToPage }) => {
         
       } catch (error) {
         console.error('❌ Error in addEarthquakeEntry:', error);
-        setError("Failed to add earthquake entry. Please try again.");
-        console.error("Error adding earthquake:", error);
+        setError("Failed to add earthquake entry: " + error.message);
       } finally {
         setIsSubmitting(false);
       }
@@ -100,14 +202,22 @@ const Dashboard = ({ navigateToPage }) => {
         await deleteEarthquake(id);
         alert("Earthquake entry deleted successfully!");
       } catch (error) {
-        setError("Failed to delete earthquake entry. Please try again.");
+        setError("Failed to delete earthquake entry: " + error.message);
         console.error("Error deleting earthquake:", error);
       }
     }
   };
 
-  const logout = () => {
-    navigateToPage(1);
+  const logout = async () => {
+    try {
+      await signOut();
+      console.log('✅ Logged out successfully');
+      onLogout(); // Use the parent logout handler
+    } catch (error) {
+      console.error('❌ Logout error:', error);
+      // Still logout even if signOut fails
+      onLogout();
+    }
   };
 
   const goBack = () => {
@@ -140,7 +250,9 @@ const Dashboard = ({ navigateToPage }) => {
         </button>
 
         <div className="dashboard-header-content">
-          <div className="dashboard-logo">ADMIN</div>
+          <div className="dashboard-logo">
+            ADMIN {currentUser && `(${currentUser.email})`}
+          </div>
           <div className="dashboard-nav-menu">
             <button
               onClick={() => navigateToPage(3)}
@@ -193,29 +305,30 @@ const Dashboard = ({ navigateToPage }) => {
           </div>
         )}
 
-        {/* Add New Entry Form */}
+        {/* Test Supabase Connection */}
         <div className="dashboard-form-container">
           <h3 className="dashboard-subsection-title">
-            Add New Earthquake Entry
+            🧪 Test Supabase Connection
           </h3>
           
-          {/* Test Firebase Connection */}
           <div style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#f0f9ff', borderRadius: '8px' }}>
             <button 
               onClick={async () => {
                 try {
-                  console.log('🧪 Testing Firebase connection...');
-                  const testData = { test: true, timestamp: new Date().toISOString() };
-                  const result = await addEarthquake(testData);
-                  console.log('✅ Test successful:', result);
-                  alert('Firebase connection test successful!');
+                  console.log('🧪 Testing Supabase connection...');
+                  const isConnected = await testSupabaseConnection();
+                  if (isConnected) {
+                    alert('✅ Supabase connection successful!');
+                  } else {
+                    alert('❌ Supabase connection failed. Check your configuration.');
+                  }
                 } catch (error) {
                   console.error('❌ Test failed:', error);
-                  alert('Firebase connection test failed: ' + error.message);
+                  alert('❌ Supabase connection test failed: ' + error.message);
                 }
               }}
               style={{ 
-                backgroundColor: '#3b82f6', 
+                backgroundColor: '#10b981', 
                 color: 'white', 
                 border: 'none', 
                 padding: '8px 16px', 
@@ -223,12 +336,73 @@ const Dashboard = ({ navigateToPage }) => {
                 cursor: 'pointer'
               }}
             >
-              🧪 Test Firebase Connection
+              🧪 Test Supabase Connection
             </button>
             <span style={{ marginLeft: '10px', fontSize: '14px', color: '#6b7280' }}>
-              Click this to test if Firebase is working
+              Click this to test if Supabase is working
             </span>
           </div>
+        </div>
+
+        {/* CSV Upload Section */}
+        <div className="dashboard-form-container">
+          <h3 className="dashboard-subsection-title">
+            📁 Upload CSV File
+          </h3>
+          
+          <div style={{ 
+            padding: '20px', 
+            backgroundColor: '#f0f9ff', 
+            borderRadius: '8px',
+            border: '2px dashed #3b82f6',
+            textAlign: 'center'
+          }}>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleCSVUpload}
+              style={{ display: 'none' }}
+              id="csv-upload"
+              disabled={isUploading}
+            />
+            <label htmlFor="csv-upload" style={{ 
+              cursor: isUploading ? 'not-allowed' : 'pointer',
+              backgroundColor: isUploading ? '#9ca3af' : '#3b82f6',
+              color: 'white',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              display: 'inline-block',
+              fontWeight: '500'
+            }}>
+              {isUploading ? '📤 Processing...' : '📁 Choose CSV File'}
+            </label>
+            
+            {uploadProgress && (
+              <p style={{ marginTop: '10px', color: '#3b82f6', fontSize: '14px' }}>
+                ⏳ {uploadProgress}
+              </p>
+            )}
+            
+            <p style={{ marginTop: '10px', color: '#6b7280', fontSize: '14px' }}>
+              Upload a CSV file with earthquake data. Expected columns: date, magnitude, location, depth, latitude, longitude, description
+            </p>
+            
+            <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#e0f2fe', borderRadius: '6px', textAlign: 'left' }}>
+              <p style={{ margin: '0 0 8px 0', fontWeight: '600', color: '#0277bd' }}>📋 CSV Format Example:</p>
+              <code style={{ fontSize: '12px', color: '#01579b' }}>
+                date,magnitude,location,depth,latitude,longitude,description<br/>
+                2024-01-15,5.2,Luzon,10.5,15.2,120.5,Strong earthquake<br/>
+                2024-01-16,4.8,Mindanao,8.2,7.1,125.6,Moderate tremor
+              </code>
+            </div>
+          </div>
+        </div>
+
+        {/* Add New Entry Form */}
+        <div className="dashboard-form-container">
+          <h3 className="dashboard-subsection-title">
+            Add New Earthquake Entry
+          </h3>
           
           <form onSubmit={addEarthquakeEntry} className="dashboard-form">
             <div className="dashboard-form-grid">
@@ -336,7 +510,7 @@ const Dashboard = ({ navigateToPage }) => {
           <div className="dashboard-table-wrapper">
             {earthquakeData.length === 0 ? (
               <div className="dashboard-empty-state">
-                <p>No earthquake entries found. Add your first entry above!</p>
+                <p>No earthquake entries found. Add your first entry above or upload a CSV file!</p>
               </div>
             ) : (
               <table className="dashboard-table">
@@ -356,7 +530,7 @@ const Dashboard = ({ navigateToPage }) => {
                 <tbody>
                   {earthquakeData.map((entry) => (
                     <tr key={entry.id}>
-                      <td>{entry.id.slice(0, 8)}...</td>
+                      <td>{entry.id}</td>
                       <td>{entry.date || (entry.timestamp ? new Date(entry.timestamp).toLocaleDateString() : 'N/A')}</td>
                       <td>{entry.magnitude}</td>
                       <td>{entry.location}</td>
@@ -382,7 +556,8 @@ const Dashboard = ({ navigateToPage }) => {
 
         <div className="dashboard-disclaimer">
           <p>Disclaimer: For informational and research purposes only</p>
-          <p>Data is stored in Firebase Firestore and updates in real-time</p>
+          <p>Data is stored in Supabase and updates in real-time</p>
+          <p>CSV files are uploaded to Supabase Storage and processed automatically</p>
         </div>
       </div>
     </div>

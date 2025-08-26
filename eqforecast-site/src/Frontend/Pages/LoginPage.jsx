@@ -1,16 +1,37 @@
 import React, { useState } from "react";
 import "../Css/LoginPage.css";
+import { signIn } from "../services/authService";
 
-const LoginPage = ({ navigateToPage }) => {
+const LoginPage = ({ navigateToPage, onLoginSuccess }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Add login validation logic here
-    console.log("Login attempt:", { username, password });
-    // Navigate to dashboard on successful login
-    navigateToPage(2);
+    
+    if (!username || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      console.log('🔐 Attempting login...');
+      const { user } = await signIn(username, password);
+      
+      console.log('✅ Login successful:', user.email);
+      onLoginSuccess(user);
+      
+    } catch (error) {
+      console.error('❌ Login failed:', error);
+      setError(error.message || "Login failed. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGuestLogin = () => {
@@ -23,6 +44,13 @@ const LoginPage = ({ navigateToPage }) => {
       <div className="login-page-content">
         <div className="login-page-form-container">
           <h1 className="login-page-title">Login</h1>
+
+          {error && (
+            <div className="login-page-error">
+              <p>{error}</p>
+              <button onClick={() => setError(null)}>Dismiss</button>
+            </div>
+          )}
 
           <form onSubmit={handleLogin} className="login-page-form">
             <div className="login-page-input-group">
@@ -47,8 +75,12 @@ const LoginPage = ({ navigateToPage }) => {
               />
             </div>
 
-            <button type="submit" className="login-page-login-btn">
-              Login
+            <button 
+              type="submit" 
+              className="login-page-login-btn"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing In..." : "Login"}
             </button>
           </form>
 
