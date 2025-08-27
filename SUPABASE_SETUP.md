@@ -127,3 +127,4 @@ Once working, you can add:
 - **🌐 Open source:** No vendor lock-in
 
 Your earthquake database will now be **persistent, real-time, and scalable**! 🎉
+

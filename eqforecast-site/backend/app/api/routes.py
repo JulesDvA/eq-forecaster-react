@@ -1,17 +1,14 @@
 """
 API routes for earthquake forecasting
 """
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from datetime import datetime
 
-from ..models.earthquake import (
-    EarthquakeResponse, EarthquakeFilter, RegionInfo, 
-    EarthquakeStatistics, PredictionRequest, PredictionResponse
-)
-from ..services.data_service import earthquake_service
-from ..services.ml_service import ml_service
-from ..services.spatial_service import spatial_bin_service
+from ..services.forecasting_service import forecasting_service
+from ..services.quadtree import QuadtreeBinner
+from ..services.prediction_service import prediction_service
+import numpy as np
 
 # Create router
 router = APIRouter()
@@ -27,11 +24,12 @@ async def root():
         "description": "API for earthquake data and forecasting system in the Philippines",
         "endpoints": {
             "health": "/health",
-            "regions": "/api/regions",
-            "earthquakes": "/api/earthquakes",
-            "statistics": "/api/statistics",
-            "predictions": "/api/predict",
-            "model_info": "/api/model-info"
+            "forecast": "/api/forecast",
+            "forecast_train": "/api/forecast/train",
+            "forecast_status": "/api/forecast/status",
+            "forecast_data": "/api/forecast/data",
+            "spatial_bins": "/api/spatial/bins",
+            "available_years": "/api/spatial/available-years"
         }
     }
 
@@ -42,173 +40,108 @@ async def health_check():
     return {
         "status": "healthy", 
         "timestamp": datetime.now().isoformat(),
-        "service": "Earthquake Forecasting API",
-        "components": {
-            "api": "healthy",
-            "data_service": "healthy",
-            "ml_service": "healthy" if ml_service.is_model_loaded else "limited"
-        }
+        "service": "Earthquake Forecasting API"
     }
 
 
-@router.get("/api/regions", response_model=List[RegionInfo], summary="Get Regions", tags=["Data"])
-async def get_regions():
-    """Get available Philippine regions for earthquake forecasting"""
+@router.get("/api/spatial/available-years", summary="Get Available Years", tags=["Spatial"])
+async def get_available_years():
+    """Get list of available years for forecasting"""
     try:
-        regions = await earthquake_service.get_regions()
-        return regions
+        years = prediction_service.get_available_years()
+        return {
+            "available_years": years,
+            "total_years": len(years),
+            "status": "success"
+        }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch regions: {str(e)}")
-
-
-@router.get("/api/earthquakes", response_model=List[EarthquakeResponse], summary="Get Earthquakes", tags=["Data"])
-async def get_earthquakes(
-    region: Optional[str] = Query(None, description="Filter by region code"),
-    start_date: Optional[datetime] = Query(None, description="Start date for filtering"),
-    end_date: Optional[datetime] = Query(None, description="End date for filtering"),
-    min_magnitude: Optional[float] = Query(None, ge=0, le=10, description="Minimum magnitude"),
-    max_magnitude: Optional[float] = Query(None, ge=0, le=10, description="Maximum magnitude"),
-    min_depth: Optional[float] = Query(None, ge=0, description="Minimum depth in km"),
-    max_depth: Optional[float] = Query(None, ge=0, description="Maximum depth in km"),
-    limit: int = Query(100, ge=1, le=1000, description="Maximum number of results")
-):
-    """Get historical earthquake data with optional filters"""
-    try:
-        filters = EarthquakeFilter(
-            region=region,
-            start_date=start_date,
-            end_date=end_date,
-            min_magnitude=min_magnitude,
-            max_magnitude=max_magnitude,
-            min_depth=min_depth,
-            max_depth=max_depth,
-            limit=limit
-        )
-        
-        earthquakes = await earthquake_service.get_earthquakes(filters)
-        return earthquakes
-        
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=f"Invalid filter parameters: {str(e)}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch earthquake data: {str(e)}")
-
-
-@router.get("/api/statistics", summary="Get Statistics", tags=["Data"])
-async def get_statistics(
-    region: Optional[str] = Query(None, description="Filter statistics by region code")
-):
-    """Get statistical information about earthquake data"""
-    try:
-        statistics = await earthquake_service.get_statistics(region)
-        return statistics
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch statistics: {str(e)}")
-
-
-@router.post("/api/predict", response_model=PredictionResponse, summary="Predict Earthquake", tags=["Prediction"])
-async def predict_earthquake(request: PredictionRequest):
-    """Predict earthquake magnitude for a specific region"""
-    try:
-        prediction = await ml_service.predict_earthquake(request)
-        return prediction
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate prediction: {str(e)}")
-
-
-@router.get("/api/model-info", summary="Get Model Information", tags=["Prediction"])
-async def get_model_info():
-    """Get information about the ML model"""
-    try:
-        model_info = await ml_service.get_model_info()
-        return model_info
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch model info: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get available years: {str(e)}")
 
 
 @router.get("/api/spatial/bins", summary="Get Spatial Bins", tags=["Spatial"])
-async def get_spatial_bins():
-    """Get all spatial earthquake prediction bins"""
+async def get_spatial_bins(year: int = Query(2024, description="Target year for forecasting")):
+    """Get earthquake statistics for the 24 spatial bins for a specific year"""
     try:
-        bins = spatial_bin_service.get_all_bins()
-        return bins
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial bins: {str(e)}")
-
-
-@router.get("/api/spatial/bins/{bin_id}", summary="Get Spatial Bin by ID", tags=["Spatial"])
-async def get_spatial_bin(bin_id: int):
-    """Get a specific spatial bin by ID"""
-    try:
-        bin_obj = spatial_bin_service.get_bin_by_id(bin_id)
-        if bin_obj is None:
-            raise HTTPException(status_code=404, detail=f"Spatial bin with ID {bin_id} not found")
-        return bin_obj
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial bin: {str(e)}")
-
-
-@router.get("/api/spatial/bins/risk/{risk_level}", summary="Get Spatial Bins by Risk Level", tags=["Spatial"])
-async def get_spatial_bins_by_risk(risk_level: str):
-    """Get spatial bins filtered by risk level"""
-    try:
-        # Convert string to enum
-        from ..models.spatial_bins import BinRiskLevel
-        try:
-            risk_enum = BinRiskLevel(risk_level.upper())
-        except ValueError:
-            raise HTTPException(status_code=400, detail=f"Invalid risk level: {risk_level}. Must be one of: LOW, MEDIUM, HIGH, CRITICAL")
+        # Get precomputed predictions for the specified year
+        spatial_bins = prediction_service.get_spatial_bins_for_year(year)
         
-        bins = spatial_bin_service.get_bins_by_risk_level(risk_enum)
-        return bins
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial bins by risk level: {str(e)}")
-
-
-@router.get("/api/spatial/info", summary="Get Spatial Binning Info", tags=["Spatial"])
-async def get_spatial_binning_info():
-    """Get information about the spatial binning system"""
-    try:
-        info = spatial_bin_service.get_binning_info()
-        return info
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch spatial binning info: {str(e)}")
-
-
-@router.get("/api/status", summary="Get API Status", tags=["General"])
-async def get_api_status():
-    """Get overall API status and readiness"""
-    try:
+        if not spatial_bins:
+            raise HTTPException(
+                status_code=404, 
+                detail=f"No predictions available for year {year}"
+            )
+        
+        # Transform to the format expected by the frontend
+        bins = []
+        for bin_data in spatial_bins:
+            bounds = bin_data.get("bounds", [])
+            if len(bounds) >= 4:  # Ensure we have [min_lon, max_lon, min_lat, max_lat]
+                min_lon, max_lon, min_lat, max_lat = bounds[:4]
+                
+                bins.append({
+                    "id": bin_data.get("bin_id", 0),
+                    "bounds": bounds,
+                    "center_lat": (min_lat + max_lat) / 2,
+                    "center_lon": (min_lon + max_lon) / 2,
+                    "width": max_lon - min_lon,
+                    "height": max_lat - min_lat,
+                    "earthquake_count": bin_data.get("earthquake_count", 0),
+                    "max_magnitude": bin_data.get("max_magnitude", 0)
+                })
+        
         return {
-            "api_status": "running",
-            "backend_ready": True,
-            "ml_model_ready": ml_service.is_model_loaded,
-            "data_service_ready": True,
-            "prediction_service_ready": True,
-            "spatial_binning_ready": True,
-            "development_phase": "Enhanced Backend Structure with Real Quadtree Bins",
-            "features": {
-                "data_filtering": True,
-                "region_statistics": True,
-                "mock_predictions": True,
-                "real_ml_predictions": ml_service.is_model_loaded,
-                "confidence_intervals": True,
-                "historical_data": True,
-                "real_quadtree_bins": True,
-                "spatial_risk_assessment": True
-            },
-            "next_steps": [
-                "Implement real ML model training",
-                "Add PHIVOLCS data integration",
-                "Implement database storage",
-                "Add comprehensive testing",
-                "Deploy to production"
-            ],
-            "timestamp": datetime.now().isoformat()
+            "target_year": year,
+            "total_bins": len(bins),
+            "target_bins": 24,
+            "bins": bins,
+            "status": "success",
+            "data_source": "precomputed_predictions"
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch API status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Spatial bins generation failed: {str(e)}")
+
+
+@router.get("/api/forecast", summary="Get Forecast", tags=["Forecasting"])
+async def get_forecast(
+    region: str = Query("all", description="Region to forecast"),
+    forecast_days: int = Query(30, description="Number of days to forecast")
+):
+    """Get earthquake forecast for a region"""
+    try:
+        forecast = await forecasting_service.get_forecast(region, forecast_days)
+        return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Forecast generation failed: {str(e)}")
+
+
+@router.post("/api/forecast/train", summary="Train Model", tags=["Forecasting"])
+async def train_model(
+    model_type: str = Query("shared_lstm", description="Type of model to train"),
+    config_name: str = Query("best_balanced", description="Configuration to use")
+):
+    """Train a forecasting model"""
+    try:
+        results = await forecasting_service.train_model(model_type, config_name)
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Model training failed: {str(e)}")
+
+
+@router.get("/api/forecast/status", summary="Get Model Status", tags=["Forecasting"])
+async def get_model_status():
+    """Get the status of forecasting models and data"""
+    try:
+        status = await forecasting_service.get_model_status()
+        return status
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Status check failed: {str(e)}")
+
+
+@router.get("/api/forecast/data", summary="Get Data Summary", tags=["Forecasting"])
+async def get_data_summary():
+    """Get a summary of the loaded earthquake data"""
+    try:
+        summary = await forecasting_service.get_data_summary()
+        return summary
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Data summary failed: {str(e)}")

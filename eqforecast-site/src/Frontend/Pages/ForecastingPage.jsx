@@ -1,46 +1,170 @@
 import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Polygon, Tooltip } from "react-leaflet";
+import { MapContainer, TileLayer, Polygon, Tooltip, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../Css/Forecasting.css";
+import { supabase } from "../supabase";
 
 const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
-  const [inputYear, setInputYear] = useState("");
   const [spatialBins, setSpatialBins] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(2025);
+  const [forecastData, setForecastData] = useState({});
+  const [forecastLoading, setForecastLoading] = useState(false);
+
+  // Hardcoded bins with exact coordinates - DO NOT CHANGE THESE
+  const hardcodedBins = [
+    { id: 0, bounds: [119.475, 122.65, 7.0, 12.0], earthquake_count: 69, max_magnitude: 0, width: 3.175, height: 5.0 },
+    { id: 1, bounds: [125.825, 127.4125, 2.0, 4.5], earthquake_count: 182, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 2, bounds: [127.4125, 129.0, 2.0, 4.5], earthquake_count: 70, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 3, bounds: [125.825, 127.4125, 4.5, 7.0], earthquake_count: 227, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 4, bounds: [124.2375, 125.825, 7.0, 9.5], earthquake_count: 61, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 5, bounds: [124.2375, 125.825, 9.5, 12.0], earthquake_count: 114, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 6, bounds: [125.825, 127.4125, 7.0, 9.5], earthquake_count: 283, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 7, bounds: [119.475, 121.0625, 12.0, 14.5], earthquake_count: 108, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 8, bounds: [119.475, 121.0625, 14.5, 17.0], earthquake_count: 98, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 9, bounds: [121.0625, 122.65, 14.5, 17.0], earthquake_count: 100, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 10, bounds: [119.475, 121.0625, 17.0, 19.5], earthquake_count: 105, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 11, bounds: [121.0625, 122.65, 17.0, 19.5], earthquake_count: 79, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 12, bounds: [119.475, 121.0625, 19.5, 22.0], earthquake_count: 46, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 13, bounds: [121.0625, 122.65, 19.5, 22.0], earthquake_count: 96, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 14, bounds: [124.2375, 125.825, 12.0, 14.5], earthquake_count: 131, max_magnitude: 0, width: 1.5875, height: 2.5 },
+    { id: 15, bounds: [127.4125, 129.0, 4.5, 9.5], earthquake_count: 63, max_magnitude: 0, width: 1.5875, height: 5.0 },
+    { id: 16, bounds: [122.65, 124.2375, 7.0, 12.0], earthquake_count: 67, max_magnitude: 0, width: 1.5875, height: 5.0 },
+    { id: 17, bounds: [121.0625, 124.2375, 12.0, 14.5], earthquake_count: 75, max_magnitude: 0, width: 3.175, height: 2.5 },
+    { id: 18, bounds: [125.825, 129.0, 12.0, 22.0], earthquake_count: 38, max_magnitude: 0, width: 3.175, height: 10.0 },
+    { id: 19, bounds: [124.2375, 125.825, 2.0, 7.0], earthquake_count: 115, max_magnitude: 0, width: 1.5875, height: 5.0 },
+    { id: 20, bounds: [125.825, 129.0, 9.5, 12.0], earthquake_count: 237, max_magnitude: 0, width: 3.175, height: 2.5 },
+    { id: 21, bounds: [122.65, 125.825, 14.5, 22.0], earthquake_count: 22, max_magnitude: 0, width: 3.175, height: 7.5 },
+    { id: 22, bounds: [116.3, 119.475, 7.0, 22.0], earthquake_count: 37, max_magnitude: 0, width: 3.175, height: 15.0 },
+    { id: 23, bounds: [116.3, 124.2375, 2.0, 7.0], earthquake_count: 75, max_magnitude: 0, width: 7.9375, height: 5.0 }
+  ];
   
-  // Fetch spatial bins from backend
+  // Initialize with hardcoded bins
   useEffect(() => {
-    const fetchSpatialBins = async () => {
+    setSpatialBins(hardcodedBins);
+  }, []);
+
+  // Fetch available years from Supabase forecasts table
+  useEffect(() => {
+    const fetchAvailableYears = async () => {
       try {
-        setLoading(true);
-        const response = await fetch("http://localhost:8000/api/spatial/bins");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        console.log("Fetching available years from Supabase forecasts table...");
+        
+        const { data, error } = await supabase
+          .from('forecasts')
+          .select('year');
+        
+        if (error) {
+          console.error("Error fetching available years:", error);
+          return;
         }
-        const data = await response.json();
-        setSpatialBins(data.bins || []);
-        setLoading(false);
+        
+        // Extract unique years and sort them
+        const uniqueYears = [...new Set(data.map(record => record.year))].sort();
+        setAvailableYears(uniqueYears);
+        
+        console.log("Available years:", uniqueYears);
+        console.log(`📈 Total years available: ${uniqueYears.length}`);
+        console.log(`🎯 Year range: ${Math.min(...uniqueYears)} - ${Math.max(...uniqueYears)}`);
+        
+        // Default to 2025 if available, otherwise use the latest available year
+        if (uniqueYears.includes(2025)) {
+          setSelectedYear(2025);
+          console.log("✅ Set default year to 2025");
+        } else if (uniqueYears.length > 0) {
+          setSelectedYear(uniqueYears[uniqueYears.length - 1]);
+          console.log(`✅ Set default year to ${uniqueYears[uniqueYears.length - 1]}`);
+        }
+        
       } catch (error) {
-        console.error("Error fetching spatial bins:", error);
-        setError("Failed to load spatial bins");
-        setLoading(false);
+        console.error("Error fetching available years:", error);
       }
     };
 
-    fetchSpatialBins();
+    fetchAvailableYears();
   }, []);
 
-  // Convert spatial bins to forecast data format
-  const forecastData = spatialBins.map(bin => ({
-    bin: bin.id,
-    maxMag: bin.max_magnitude > 0 ? bin.max_magnitude.toFixed(1) : "-",
-    noOfEq: bin.historical_earthquake_count || "-"
-  }));
+  // Fetch forecast data from Supabase forecasts table when selected year changes
+  useEffect(() => {
+    const fetchForecastData = async () => {
+      if (!selectedYear) return;
+      
+      try {
+        setForecastLoading(true);
+        console.log(`🔍 Fetching forecast data from Supabase forecasts table for year ${selectedYear}...`);
+        
+        const { data, error } = await supabase
+          .from('forecasts')
+          .select('bin_id, year, forecast_frequency, forecast_max_mag')
+          .eq('year', selectedYear)
+          .order('bin_id');
+        
+        if (error) {
+          console.error("❌ Error fetching forecast data:", error);
+          setError("Failed to fetch forecast data");
+          return;
+        }
+        
+        console.log(`✅ Forecast data for ${selectedYear}:`, data);
+        console.log(`📊 Total records found:`, data.length);
+        
+        // Convert to a map for easy lookup using numeric bin IDs
+        const forecastMap = {};
+        data.forEach(forecast => {
+          // Use numeric bin_id as key (e.g., "0" -> 0, "1" -> 1)
+          const numericId = parseInt(forecast.bin_id);
+          forecastMap[numericId] = forecast;
+          console.log(`🔄 Mapping: "${forecast.bin_id}" -> ${numericId} (freq: ${forecast.forecast_frequency}, mag: ${forecast.forecast_max_mag})`);
+        });
+        
+        console.log(`🎯 Final forecast map:`, forecastMap);
+        console.log(`📋 Available bin IDs:`, Object.keys(forecastMap));
+        
+        setForecastData(forecastMap);
+        setError(null);
+        
+      } catch (error) {
+        console.error("❌ Error fetching forecast data:", error);
+        setError("Failed to fetch forecast data");
+      } finally {
+        setForecastLoading(false);
+      }
+    };
+
+    fetchForecastData();
+  }, [selectedYear]);
+
+  // Convert spatial bins to regions format for map display
+  const regions = hardcodedBins.map(bin => {
+    const forecast = forecastData[bin.id];
+    return {
+      id: bin.id,
+      name: `Bin ${bin.id}`,
+      bin: bin.id,
+      positions: [
+        [bin.bounds[2], bin.bounds[0]], // SW corner (lat, lon)
+        [bin.bounds[2], bin.bounds[1]], // SE corner (lat, lon)
+        [bin.bounds[3], bin.bounds[1]], // NE corner (lat, lon)
+        [bin.bounds[3], bin.bounds[0]]  // NW corner (lat, lon)
+      ],
+      earthquake_count: bin.earthquake_count || 0,
+      max_magnitude: bin.max_magnitude || 0,
+      forecast: forecast ? {
+        forecast_frequency: forecast.forecast_frequency,
+        forecast_max_mag: forecast.forecast_max_mag
+      } : null
+    };
+  });
 
   const goBack = () => {
     navigateToPage(3);
+  };
+
+  const handleYearSubmit = () => {
+    console.log("Generating forecast for year:", inputYear);
   };
 
   // Fix for default markers
@@ -53,24 +177,6 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
     shadowUrl:
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
   });
-
-  // Convert spatial bins to regions format for map display
-  const regions = spatialBins.map(bin => ({
-    id: bin.id,
-    name: bin.name,
-    risk: bin.risk_level.toLowerCase(),
-    bin: bin.id,
-    positions: bin.coordinates,
-    regionCode: bin.region_code,
-    riskScore: bin.risk_score,
-    historicalCount: bin.historical_earthquake_count,
-    avgMagnitude: bin.avg_magnitude,
-    maxMagnitude: bin.max_magnitude
-  }));
-
-  const handleYearSubmit = () => {
-    console.log("Generating forecast for year:", inputYear);
-  };
 
   return (
     <div className="forecast-page-container">
@@ -131,24 +237,33 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
         {/* Sidebar */}
         <div className="forecast-page-sidebar">
           <div className="forecast-page-input-section">
-            <label className="forecast-page-input-label">Input Year</label>
-            <input
-              type="number"
-              value={inputYear}
-              onChange={(e) => setInputYear(e.target.value)}
+            <label className="forecast-page-input-label">Select Historical Year (1960-{Math.max(...availableYears)})</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="forecast-page-year-input"
-              placeholder="Enter year"
-            />
+            >
+              {availableYears.map(year => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+              {availableYears.length} years available: {Math.min(...availableYears)} - {Math.max(...availableYears)}
+            </div>
           </div>
+
+
 
           <div className="forecast-page-table-section">
             <h3 className="forecast-page-table-title">
-              Quadtree Spatial Bins ({spatialBins.length} total)
+              Earthquake Forecast for {selectedYear} ({hardcodedBins.length} bins)
             </h3>
             
             {loading && (
               <div style={{ textAlign: 'center', padding: '20px' }}>
-                Loading spatial bins...
+                Loading earthquake data for {selectedYear}...
               </div>
             )}
             
@@ -159,28 +274,68 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
             )}
             
             {!loading && !error && (
-              <table className="forecast-page-table">
-                <thead>
-                  <tr>
-                    <th>BIN ID</th>
-                    <th>MAX MAG.</th>
-                    <th>NO. OF EQ</th>
-                    <th>RISK</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {forecastData.map((row, index) => (
+              <div className="forecast-page-table-container">
+                <table className="forecast-page-table">
+              <thead>
+                <tr>
+                  <th>BIN ID</th>
+                  <th>FORECAST FREQUENCY</th>
+                  <th>FORECAST MAX MAGNITUDE</th>
+                  <th>RISK LEVEL</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hardcodedBins.map((bin, index) => {
+                  const forecast = forecastData[bin.id];
+                  return (
                     <tr key={index}>
-                      <td>BIN {row.bin}</td>
-                      <td>{row.maxMag}</td>
-                      <td>{row.noOfEq}</td>
-                      <td>{spatialBins[index]?.risk_level || '-'}</td>
+                      <td>BIN {bin.id}</td>
+                      <td>
+                        {forecast ? (
+                          <span style={{ color: 'black', fontWeight: 'bold' }}>
+                            {Math.round(forecast.forecast_frequency) || 'N/A'}
+                          </span>
+                        ) : (
+                          <span style={{ color: '#666', fontStyle: 'italic' }}>No forecast data</span>
+                        )}
+                      </td>
+                      <td>
+                        {forecast ? (
+                          <span style={{ color: 'black', fontWeight: 'bold' }}>
+                            {forecast.forecast_max_mag?.toFixed(1) || 'N/A'}
+                          </span>
+                        ) : (
+                          <span style={{ color: '#666', fontStyle: 'italic' }}>No forecast data</span>
+                        )}
+                      </td>
+                      <td>
+                        {forecast ? (
+                          (() => {
+                            const maxMag = forecast.forecast_max_mag;
+                            if (maxMag >= 7.0) {
+                              return <span style={{ color: '#dc2626', fontWeight: 'bold' }}>HIGH</span>;
+                            } else if (maxMag >= 6.1) {
+                              return <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>MEDIUM</span>;
+                            } else if (maxMag >= 5.0) {
+                              return <span style={{ color: '#10b981', fontWeight: 'bold' }}>LOW</span>;
+                            } else {
+                              return <span style={{ color: '#6b7280', fontWeight: 'bold' }}>MINIMAL</span>;
+                            }
+                          })()
+                        ) : (
+                          <span style={{ color: '#666', fontStyle: 'italic' }}>No forecast data</span>
+                        )}
+                      </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  );
+                })}
+              </tbody>
+            </table>
+              </div>
             )}
           </div>
+
+
         </div>
 
         {/* Main Map Area */}
@@ -202,37 +357,58 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
                   key={index}
                   positions={region.positions}
                   pathOptions={{
-                    fillColor: 'transparent',
-                    fillOpacity: 0,
-                    color: '#2563eb',
-                    weight: 2,
-                    opacity: 0.8
+                    fillColor: (() => {
+                      if (region.forecast) {
+                        const maxMag = region.forecast.forecast_max_mag;
+                        if (maxMag >= 7.0) return '#dc2626'; // Red for HIGH
+                        if (maxMag >= 6.1) return '#f59e0b'; // Orange for MEDIUM
+                        if (maxMag >= 5.0) return '#86efac'; // Light green for LOW
+                        return '#6b7280'; // Gray for MINIMAL
+                      }
+                      return 'transparent';
+                    })(),
+                    fillOpacity: 0.3,
+                    color: 'black',
+                    weight: 1.5,
+                    opacity: 1.0
                   }}
                 >
-                  <Tooltip 
-                    permanent={false}
-                    direction="top"
-                    offset={[0, -10]}
-                    opacity={0.9}
-                    className="bin-tooltip"
-                  >
-                    <div style={{ 
-                      minWidth: '200px', 
-                      fontSize: '12px',
-                      lineHeight: '1.4'
-                    }}>
-                      <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
-                        {region.name}
-                      </div>
-                      <div><strong>BIN ID:</strong> {region.bin}</div>
-                      <div><strong>Region Code:</strong> {region.regionCode}</div>
-                      <div><strong>Risk Level:</strong> {region.risk}</div>
-                      <div><strong>Risk Score:</strong> {region.riskScore}</div>
-                      <div><strong>Historical Earthquakes:</strong> {region.historicalCount}</div>
-                      <div><strong>Avg Magnitude:</strong> {region.avgMagnitude > 0 ? region.avgMagnitude.toFixed(2) : 'N/A'}</div>
-                      <div><strong>Max Magnitude:</strong> {region.maxMagnitude > 0 ? region.maxMagnitude.toFixed(2) : 'N/A'}</div>
-                    </div>
-                  </Tooltip>
+                                     <Tooltip 
+                     permanent={false}
+                     direction="top"
+                     offset={[0, -10]}
+                     opacity={0.9}
+                     className="bin-tooltip"
+                   >
+                     <div style={{ 
+                       minWidth: '180px', 
+                       fontSize: '12px',
+                       lineHeight: '1.4',
+                       textAlign: 'center'
+                     }}>
+                       <div style={{ fontWeight: 'bold', marginBottom: '8px', fontSize: '14px' }}>
+                         Bin {region.bin}
+                       </div>
+                       {region.forecast ? (
+                         <>
+                           <div style={{ marginBottom: '4px', color: 'white', fontWeight: 'bold' }}>
+                             <strong>{selectedYear} FORECAST:</strong>
+                           </div>
+                           <div style={{ marginBottom: '4px', color: 'white' }}>
+                             <strong>Frequency:</strong> {Math.round(region.forecast.forecast_frequency) || 'N/A'}
+                           </div>
+                           <div style={{ marginBottom: '4px', color: 'white' }}>
+                             <strong>Max Magnitude:</strong> {region.forecast.forecast_max_mag?.toFixed(1) || 'N/A'}
+                           </div>
+                         </>
+                       ) : (
+                         <div style={{ marginBottom: '4px', color: '#666', fontStyle: 'italic' }}>
+                           No forecast data available
+                         </div>
+                       )}
+
+                     </div>
+                   </Tooltip>
                 </Polygon>
               ))}
             </MapContainer>
@@ -246,25 +422,5 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
     </div>
   );
 };
-
-async function getPrediction(input) {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input), // e.g. { latitude, longitude, depth, year }
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-    console.log("Predicted magnitude:", data.predicted_magnitude);
-    return data.predicted_magnitude;
-  } catch (error) {
-    console.error("Error fetching prediction:", error);
-  }
-}
 
 export default ForecastPage;

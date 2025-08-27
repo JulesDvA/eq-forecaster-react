@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     API_VERSION: str = "1.0.0"
     
     # Server Settings
-    HOST: str = "0.0.0.0"
+    HOST: str = "127.0.0.1"
     PORT: int = 8000
     DEBUG: bool = True
     
@@ -24,24 +24,11 @@ class Settings(BaseSettings):
         "http://localhost:5173",  # Vite dev server
         "http://localhost:3000",  # React dev server
         "http://localhost:8080",  # Alternative dev server
+        "http://127.0.0.1:5173",  # Vite dev server (alternative)
     ]
-    
-    # Database Settings (for future use)
-    DATABASE_URL: str = "sqlite:///./earthquake_data.db"
-    
-    # External API Settings
-    PHIVOLCS_API_URL: str = "https://earthquake.phivolcs.dost.gov.ph"
-    USGS_API_URL: str = "https://earthquake.usgs.gov/fdsnws/event/1"
-    
-    # ML Model Settings
-    MODEL_PATH: str = "./models"
-    MODEL_NAME: str = "earthquake_lstm_model.pkl"
     
     # Logging
     LOG_LEVEL: str = "INFO"
-    
-    # Rate Limiting
-    RATE_LIMIT_PER_MINUTE: int = 100
     
     class Config:
         env_file = ".env"

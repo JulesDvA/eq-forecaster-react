@@ -94,3 +94,4 @@ export const isAuthenticated = async () => {
   const user = await getCurrentUser();
   return user !== null;
 };
+

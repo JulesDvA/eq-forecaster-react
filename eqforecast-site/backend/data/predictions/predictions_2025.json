@@ -1,0 +1,343 @@
+{
+  "year": 2025,
+  "generated_at": "2025-08-27T00:45:56.802424Z",
+  "total_bins": 24,
+  "predictions": [
+    {
+      "bin_id": 0,
+      "bounds": [
+        116.0,
+        119.25,
+        2.0,
+        5.333333333333334
+      ],
+      "earthquake_frequency": 1454,
+      "max_magnitude": 8.4,
+      "historical_frequency": 1322.0,
+      "historical_max_magnitude": 8.3,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 1,
+      "bounds": [
+        119.25,
+        122.5,
+        2.0,
+        5.333333333333334
+      ],
+      "earthquake_frequency": 2434,
+      "max_magnitude": 7.6,
+      "historical_frequency": 2213.0,
+      "historical_max_magnitude": 7.5,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 2,
+      "bounds": [
+        122.5,
+        125.75,
+        2.0,
+        5.333333333333334
+      ],
+      "earthquake_frequency": 1640,
+      "max_magnitude": 7.1,
+      "historical_frequency": 1491.0,
+      "historical_max_magnitude": 7.0,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 3,
+      "bounds": [
+        125.75,
+        129.0,
+        2.0,
+        5.333333333333334
+      ],
+      "earthquake_frequency": 2862,
+      "max_magnitude": 8.4,
+      "historical_frequency": 2602.0,
+      "historical_max_magnitude": 8.3,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 4,
+      "bounds": [
+        116.0,
+        119.25,
+        5.333333333333334,
+        8.666666666666668
+      ],
+      "earthquake_frequency": 1201,
+      "max_magnitude": 6.6,
+      "historical_frequency": 1092.0,
+      "historical_max_magnitude": 6.5,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 5,
+      "bounds": [
+        119.25,
+        122.5,
+        5.333333333333334,
+        8.666666666666668
+      ],
+      "earthquake_frequency": 1956,
+      "max_magnitude": 7.1,
+      "historical_frequency": 1779.0,
+      "historical_max_magnitude": 7.0,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 6,
+      "bounds": [
+        122.5,
+        125.75,
+        5.333333333333334,
+        8.666666666666668
+      ],
+      "earthquake_frequency": 2932,
+      "max_magnitude": 7.8,
+      "historical_frequency": 2666.0,
+      "historical_max_magnitude": 7.7,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 7,
+      "bounds": [
+        125.75,
+        129.0,
+        5.333333333333334,
+        8.666666666666668
+      ],
+      "earthquake_frequency": 1947,
+      "max_magnitude": 7.8,
+      "historical_frequency": 1770.0,
+      "historical_max_magnitude": 7.7,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 8,
+      "bounds": [
+        116.0,
+        119.25,
+        8.666666666666668,
+        12.0
+      ],
+      "earthquake_frequency": 1813,
+      "max_magnitude": 7.8,
+      "historical_frequency": 1649.0,
+      "historical_max_magnitude": 7.7,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 9,
+      "bounds": [
+        119.25,
+        122.5,
+        8.666666666666668,
+        12.0
+      ],
+      "earthquake_frequency": 1765,
+      "max_magnitude": 7.9,
+      "historical_frequency": 1605.0,
+      "historical_max_magnitude": 7.8,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 10,
+      "bounds": [
+        122.5,
+        125.75,
+        8.666666666666668,
+        12.0
+      ],
+      "earthquake_frequency": 1511,
+      "max_magnitude": 7.1,
+      "historical_frequency": 1374.0,
+      "historical_max_magnitude": 7.0,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 11,
+      "bounds": [
+        125.75,
+        129.0,
+        8.666666666666668,
+        12.0
+      ],
+      "earthquake_frequency": 1475,
+      "max_magnitude": 7.3,
+      "historical_frequency": 1341.0,
+      "historical_max_magnitude": 7.2,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 12,
+      "bounds": [
+        116.0,
+        119.25,
+        12.0,
+        15.333333333333334
+      ],
+      "earthquake_frequency": 1730,
+      "max_magnitude": 7.2,
+      "historical_frequency": 1573.0,
+      "historical_max_magnitude": 7.1,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 13,
+      "bounds": [
+        119.25,
+        122.5,
+        12.0,
+        15.333333333333334
+      ],
+      "earthquake_frequency": 1548,
+      "max_magnitude": 7.1,
+      "historical_frequency": 1408.0,
+      "historical_max_magnitude": 7.0,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 14,
+      "bounds": [
+        122.5,
+        125.75,
+        12.0,
+        15.333333333333334
+      ],
+      "earthquake_frequency": 2316,
+      "max_magnitude": 7.5,
+      "historical_frequency": 2106.0,
+      "historical_max_magnitude": 7.4,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 15,
+      "bounds": [
+        125.75,
+        129.0,
+        12.0,
+        15.333333333333334
+      ],
+      "earthquake_frequency": 1593,
+      "max_magnitude": 8.0,
+      "historical_frequency": 1449.0,
+      "historical_max_magnitude": 7.9,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 16,
+      "bounds": [
+        116.0,
+        119.25,
+        15.333333333333334,
+        18.666666666666668
+      ],
+      "earthquake_frequency": 1974,
+      "max_magnitude": 7.3,
+      "historical_frequency": 1795.0,
+      "historical_max_magnitude": 7.2,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 17,
+      "bounds": [
+        119.25,
+        122.5,
+        15.333333333333334,
+        18.666666666666668
+      ],
+      "earthquake_frequency": 2027,
+      "max_magnitude": 7.2,
+      "historical_frequency": 1843.0,
+      "historical_max_magnitude": 7.1,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 18,
+      "bounds": [
+        122.5,
+        125.75,
+        15.333333333333334,
+        18.666666666666668
+      ],
+      "earthquake_frequency": 1410,
+      "max_magnitude": 7.1,
+      "historical_frequency": 1282.0,
+      "historical_max_magnitude": 7.0,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 19,
+      "bounds": [
+        125.75,
+        129.0,
+        15.333333333333334,
+        18.666666666666668
+      ],
+      "earthquake_frequency": 1822,
+      "max_magnitude": 7.4,
+      "historical_frequency": 1657.0,
+      "historical_max_magnitude": 7.3,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 20,
+      "bounds": [
+        116.0,
+        119.25,
+        18.666666666666668,
+        22.0
+      ],
+      "earthquake_frequency": 3203,
+      "max_magnitude": 7.8,
+      "historical_frequency": 2912.0,
+      "historical_max_magnitude": 7.7,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 21,
+      "bounds": [
+        119.25,
+        122.5,
+        18.666666666666668,
+        22.0
+      ],
+      "earthquake_frequency": 1167,
+      "max_magnitude": 6.5,
+      "historical_frequency": 1061.0,
+      "historical_max_magnitude": 6.4,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 22,
+      "bounds": [
+        122.5,
+        125.75,
+        18.666666666666668,
+        22.0
+      ],
+      "earthquake_frequency": 1094,
+      "max_magnitude": 7.7,
+      "historical_frequency": 995.0,
+      "historical_max_magnitude": 7.6,
+      "confidence": 0.85
+    },
+    {
+      "bin_id": 23,
+      "bounds": [
+        125.75,
+        129.0,
+        18.666666666666668,
+        22.0
+      ],
+      "earthquake_frequency": 1768,
+      "max_magnitude": 8.0,
+      "historical_frequency": 1608.0,
+      "historical_max_magnitude": 7.9,
+      "confidence": 0.85
+    }
+  ]
+}

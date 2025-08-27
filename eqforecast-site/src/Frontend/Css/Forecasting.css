@@ -127,7 +127,7 @@
 
 /* Sidebar Styles */
 .forecast-page-sidebar {
-  width: 380px;
+  width: 450px;
   background-color: white;
   padding: 24px;
   overflow-y: auto;
@@ -191,6 +191,12 @@
   border: 2px solid #e5e7eb;
 }
 
+.forecast-page-table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 8px;
+}
+
 .forecast-page-table th {
   background-color: #102d30;
   padding: 12px 16px;
@@ -228,8 +234,16 @@
 
 .forecast-page-map-container {
   height: 100%;
-  position: relative;
+  width: 100%;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure Leaflet map takes full container size */
+.leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
 }
 
 /* Leaflet popup customization */
