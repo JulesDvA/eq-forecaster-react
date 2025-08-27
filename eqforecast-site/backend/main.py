@@ -1,12 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 import logging
-import os
 
 from app.core.config import settings
 from app.api.routes import router
-from app.services.ml_service import ml_service
 
 # Configure logging
 logging.basicConfig(level=getattr(logging, settings.LOG_LEVEL))
@@ -39,21 +36,13 @@ async def startup_event():
     """Initialize services on startup"""
     logger.info("Starting Earthquake Forecasting API...")
     
-    # Try to load ML model
-    model_loaded = await ml_service.load_model()
-    if model_loaded:
-        logger.info("ML model loaded successfully")
-    else:
-        logger.warning("ML model not loaded - using mock predictions")
+    # Initialize forecasting service
+    try:
+        from app.services.forecasting_service import forecasting_service
+        await forecasting_service.initialize()
+        logger.info("Forecasting service initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize forecasting service: {e}")
+        logger.warning("Forecasting endpoints may not work properly")
     
     logger.info("API startup complete")
-
-if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host=settings.HOST,
-        port=settings.PORT,
-        reload=settings.DEBUG,
-        log_level=settings.LOG_LEVEL.lower()
-    )
-

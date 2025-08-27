@@ -127,3 +127,4 @@ export const subscribeToEarthquakes = (callback) => {
     subscription.unsubscribe()
   }
 }
+
