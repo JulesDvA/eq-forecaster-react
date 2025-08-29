@@ -1,13 +1,32 @@
 import React from "react";
 import "../Css/AwarenessPage.css";
 
-const AwarenessPage = ({ navigateToPage }) => {
+const AwarenessPage = ({ navigateToPage, isLoggedIn }) => {
+  const goBack = () => {
+    navigateToPage(3);
+  };
+
   return (
     <div className="awareness-page-container">
       {/* Header */}
       <div className="awareness-page-header">
+        <button
+          onClick={goBack}
+          className="awareness-page-back-btn"
+          title="Go back"
+        >
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
         <div className="awareness-page-header-content">
-          <div className="awareness-page-logo">Earthquake Forecasting</div>
+          <div className="awareness-page-logo"></div>
           <div className="awareness-page-nav-menu">
             <button
               onClick={() => navigateToPage(3)}
@@ -39,6 +58,14 @@ const AwarenessPage = ({ navigateToPage }) => {
             >
               Forecast Now
             </button>
+            {isLoggedIn && (
+              <button
+                onClick={() => navigateToPage(2)}
+                className="awareness-page-admin-btn"
+              >
+                Admin
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -28,7 +28,7 @@ const LandingPage = ({ navigateToPage, isLoggedIn }) => {
         </button>
 
         <div className="landing-page-header-content">
-          <div className="landing-page-logo">Earthquake Forecasting</div>
+          <div className="landing-page-logo"></div>
           <div className="landing-page-nav-menu">
             <button
               onClick={() => navigateToPage(3)}

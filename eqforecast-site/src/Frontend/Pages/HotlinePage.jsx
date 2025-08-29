@@ -26,7 +26,7 @@ const HotlinePage = ({ navigateToPage, isLoggedIn }) => {
         </button>
 
         <div className="hotline-page-header-content">
-          <div className="hotline-page-logo">Earthquake Forecasting</div>
+          <div className="hotline-page-logo"> </div>
           <div className="hotline-page-nav-menu">
             <button
               onClick={() => navigateToPage(3)}

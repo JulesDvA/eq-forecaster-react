@@ -31,10 +31,10 @@
 .about-page-nav-menu {
   font-weight: normal;
   display: flex;
-  align-items: center;
+  align-items:end;
   gap: 24px;
-  font-size: 14px;
-  flex-wrap: wrap;
+  justify-self: end;
+  flex-wrap: nowrap;
 }
 
 .about-page-nav-item {

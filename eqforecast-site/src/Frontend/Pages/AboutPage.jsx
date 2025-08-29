@@ -28,7 +28,7 @@ const AboutPage = ({ navigateToPage, isLoggedIn }) => {
         </button>
 
         <div className="about-page-header-content">
-          <div className="about-page-logo">Earthquake Forecasting</div>
+          <div className="about-page-logo"></div>
           <div className="about-page-nav-menu">
             <button
               onClick={() => navigateToPage(3)}

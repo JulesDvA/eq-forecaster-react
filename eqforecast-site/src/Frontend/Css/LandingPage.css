@@ -20,7 +20,7 @@
   max-width: 1280px;
   margin: 0 auto;
   flex-wrap: wrap;
-  gap: 16px;
+  /* gap: 100px; */
 }
 
 .landing-page-logo {
@@ -31,7 +31,7 @@
 .landing-page-nav-menu {
   font-weight: normal;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 24px;
   font-size: 14px;
   flex-wrap: wrap;
