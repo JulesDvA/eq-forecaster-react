@@ -151,23 +151,20 @@ const AboutPage = ({ navigateToPage, isLoggedIn }) => {
                 />
               </div>
               <div className="about-page-team-description">
-                <h3 className="about-page-team-section-title">
-                  Earthquake Forecasting
-                </h3>
+                <h3 className="about-page-team-section-title">OPAL</h3>
+
                 <p className="about-page-team-paragraph">
-                  Body text for your whole article or post. We'll put in some
-                  lorem ipsum to show how a filled-out page might look.
-                </p>
-                <p className="about-page-team-paragraph">
-                  Excepteur efficient emerging, minim veniam anim aute carefully
-                  curated Ginza conversation exquisite perfect nostrud nisi
-                  intricate Content. Qui international first-class nulla ut.
-                  Punctual adipiscing, essential lovely queen tempor eiusmod
-                  irure. Exclusive izakaya charming Scandinavian impeccable aute
-                  quality of life soft power pariatur Melbourne consectetur
-                  discerning. Qui wardrobe aliquip, et Porter destination Toto
-                  remarkable officia Helsinki excepteur Basset hound. Zürich
-                  sleepy perfect consectetur.
+                  We are 4th-year Computer Science students from Holy Angel
+                  University conducting a research study entitled
+                  “Spatiotemporal Earthquake Forecasting in the Philippines
+                  Modelling Attention LSTM ” Our study aims to develop a
+                  forecasting system that analyzes historical earthquake data
+                  from PHIVOLCS to generate annual predictions of earthquake
+                  frequency and maximum magnitude per region. The system
+                  integrates an Attention-Driven Long Short-Term Memory (LSTM)
+                  model with a Quadtree-based spatial binning algorithm and
+                  provides results through an interactive visualization
+                  platform.
                 </p>
               </div>
             </div>

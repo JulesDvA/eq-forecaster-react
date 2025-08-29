@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "../Css/Dashboard.css";
-import { 
-  addEarthquake, 
-  deleteEarthquake, 
-  updateEarthquake, 
+import {
+  addEarthquake,
+  deleteEarthquake,
+  updateEarthquake,
   subscribeToEarthquakes,
-  getEarthquakes
+  getEarthquakes,
 } from "../services/earthquakeService";
 import { testSupabaseConnection } from "../supabase";
 import { uploadAndProcessCSV } from "../services/csvUploadService";
@@ -27,7 +27,7 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
     depth: "",
     latitude: "",
     longitude: "",
-    description: ""
+    description: "",
   });
 
   // Load initial data and set up real-time subscription
@@ -35,21 +35,21 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
     const loadData = async () => {
       try {
         setLoading(true);
-        
+
         // Check authentication
         const user = await getCurrentUser();
         if (!user) {
-          console.error('❌ No authenticated user found');
+          console.error("❌ No authenticated user found");
           navigateToPage(2); // Go back to login
           return;
         }
-        
+
         setCurrentUser(user);
-        
+
         const earthquakes = await getEarthquakes();
         setEarthquakeData(earthquakes);
       } catch (error) {
-        setError('Failed to load earthquake data: ' + error.message);
+        setError("Failed to load earthquake data: " + error.message);
       } finally {
         setLoading(false);
       }
@@ -59,14 +59,16 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
 
     // Set up real-time subscription
     const unsubscribe = subscribeToEarthquakes((payload) => {
-      if (payload.eventType === 'INSERT') {
-        setEarthquakeData(prev => [payload.new, ...prev]);
-      } else if (payload.eventType === 'DELETE') {
-        setEarthquakeData(prev => prev.filter(item => item.id !== payload.old.id));
-      } else if (payload.eventType === 'UPDATE') {
-        setEarthquakeData(prev => prev.map(item => 
-          item.id === payload.new.id ? payload.new : item
-        ));
+      if (payload.eventType === "INSERT") {
+        setEarthquakeData((prev) => [payload.new, ...prev]);
+      } else if (payload.eventType === "DELETE") {
+        setEarthquakeData((prev) =>
+          prev.filter((item) => item.id !== payload.old.id)
+        );
+      } else if (payload.eventType === "UPDATE") {
+        setEarthquakeData((prev) =>
+          prev.map((item) => (item.id === payload.new.id ? payload.new : item))
+        );
       }
     });
 
@@ -83,27 +85,27 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!file.name.endsWith('.csv')) {
-      alert('Please select a CSV file');
+    if (!file.name.endsWith(".csv")) {
+      alert("Please select a CSV file");
       return;
     }
 
     setIsUploading(true);
     setError(null);
-    setUploadProgress('Starting upload...');
+    setUploadProgress("Starting upload...");
 
     try {
-      setUploadProgress('Uploading to Supabase Storage...');
-      
+      setUploadProgress("Uploading to Supabase Storage...");
+
       // Upload and process CSV
       const result = await uploadAndProcessCSV(file);
-      
-      setUploadProgress('Adding earthquake entries to database...');
-      
+
+      setUploadProgress("Adding earthquake entries to database...");
+
       // Add valid earthquake entries to database
       let addedCount = 0;
       let errorCount = 0;
-      
+
       for (const earthquake of result.data) {
         try {
           await addEarthquake(earthquake);
@@ -112,23 +114,23 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
           errorCount++;
         }
       }
-      
+
       // Show results
-      const message = `CSV processed successfully!\n\n` +
+      const message =
+        `CSV processed successfully!\n\n` +
         `📁 File: ${result.storage.fileName}\n` +
         `📊 Total rows: ${result.parsing.totalRows}\n` +
         `✅ Valid rows: ${result.parsing.validRows}\n` +
         `❌ Error rows: ${result.parsing.errorRows}\n` +
         `💾 Added to database: ${addedCount}\n` +
         `🚫 Database errors: ${errorCount}`;
-      
+
       alert(message);
-      
+
       // Reset file input
-      e.target.value = '';
-      
+      e.target.value = "";
     } catch (error) {
-      console.error('❌ CSV upload error:', error);
+      console.error("❌ CSV upload error:", error);
       setError(`CSV upload failed: ${error.message}`);
     } finally {
       setIsUploading(false);
@@ -138,15 +140,24 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
 
   const addEarthquakeEntry = async (e) => {
     e.preventDefault();
-    
+
     // Check required fields
-    const requiredFields = ['date', 'magnitude', 'location', 'depth', 'latitude', 'longitude'];
-    const hasAllRequired = requiredFields.every(field => newEntry[field] !== "");
-    
+    const requiredFields = [
+      "date",
+      "magnitude",
+      "location",
+      "depth",
+      "latitude",
+      "longitude",
+    ];
+    const hasAllRequired = requiredFields.every(
+      (field) => newEntry[field] !== ""
+    );
+
     if (hasAllRequired) {
       setIsSubmitting(true);
       setError(null);
-      
+
       try {
         const earthquakeData = {
           ...newEntry,
@@ -154,11 +165,11 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
           depth: parseFloat(newEntry.depth),
           latitude: parseFloat(newEntry.latitude),
           longitude: parseFloat(newEntry.longitude),
-          timestamp: new Date(newEntry.date).toISOString()
+          timestamp: new Date(newEntry.date).toISOString(),
         };
 
         await addEarthquake(earthquakeData);
-        
+
         // Reset form
         setNewEntry({
           date: "",
@@ -166,12 +177,11 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
           depth: "",
           latitude: "",
           longitude: "",
-          description: ""
+          description: "",
         });
 
         // Show success message
         alert("Earthquake entry added successfully!");
-        
       } catch (error) {
         setError("Failed to add earthquake entry: " + error.message);
       } finally {
@@ -183,7 +193,9 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
   };
 
   const deleteEntry = async (id) => {
-    if (window.confirm("Are you sure you want to delete this earthquake entry?")) {
+    if (
+      window.confirm("Are you sure you want to delete this earthquake entry?")
+    ) {
       try {
         await deleteEarthquake(id);
         alert("Earthquake entry deleted successfully!");
@@ -294,33 +306,44 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
           <h3 className="dashboard-subsection-title">
             🧪 Test Supabase Connection
           </h3>
-          
-          <div style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#f0f9ff', borderRadius: '8px' }}>
-            <button 
+
+          <div
+            style={{
+              marginBottom: "20px",
+              padding: "10px",
+              backgroundColor: "#f0f9ff",
+              borderRadius: "8px",
+            }}
+          >
+            <button
               onClick={async () => {
                 try {
                   const isConnected = await testSupabaseConnection();
                   if (isConnected) {
-                    alert('✅ Supabase connection successful!');
+                    alert("✅ Supabase connection successful!");
                   } else {
-                    alert('❌ Supabase connection failed. Check your configuration.');
+                    alert(
+                      "❌ Supabase connection failed. Check your configuration."
+                    );
                   }
                 } catch (error) {
-                  alert('❌ Supabase connection test failed: ' + error.message);
+                  alert("❌ Supabase connection test failed: " + error.message);
                 }
               }}
-              style={{ 
-                backgroundColor: '#10b981', 
-                color: 'white', 
-                border: 'none', 
-                padding: '8px 16px', 
-                borderRadius: '4px',
-                cursor: 'pointer'
+              style={{
+                backgroundColor: "#10b981",
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: "4px",
+                cursor: "pointer",
               }}
             >
               🧪 Test Supabase Connection
             </button>
-            <span style={{ marginLeft: '10px', fontSize: '14px', color: '#6b7280' }}>
+            <span
+              style={{ marginLeft: "10px", fontSize: "14px", color: "#6b7280" }}
+            >
               Click this to test if Supabase is working
             </span>
           </div>
@@ -328,218 +351,95 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
 
         {/* CSV Upload Section */}
         <div className="dashboard-form-container">
-          <h3 className="dashboard-subsection-title">
-            📁 Upload CSV File
-          </h3>
-          
-          <div style={{ 
-            padding: '20px', 
-            backgroundColor: '#f0f9ff', 
-            borderRadius: '8px',
-            border: '2px dashed #3b82f6',
-            textAlign: 'center'
-          }}>
+          <h3 className="dashboard-subsection-title">📁 Upload CSV File</h3>
+
+          <div
+            style={{
+              padding: "20px",
+              backgroundColor: "#f0f9ff",
+              borderRadius: "8px",
+              border: "2px dashed #3b82f6",
+              textAlign: "center",
+            }}
+          >
             <input
               type="file"
               accept=".csv"
               onChange={handleCSVUpload}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               id="csv-upload"
               disabled={isUploading}
             />
-            <label htmlFor="csv-upload" style={{ 
-              cursor: isUploading ? 'not-allowed' : 'pointer',
-              backgroundColor: isUploading ? '#9ca3af' : '#3b82f6',
-              color: 'white',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              display: 'inline-block',
-              fontWeight: '500'
-            }}>
-              {isUploading ? '📤 Processing...' : '📁 Choose CSV File'}
+            <label
+              htmlFor="csv-upload"
+              style={{
+                cursor: isUploading ? "not-allowed" : "pointer",
+                backgroundColor: isUploading ? "#9ca3af" : "#3b82f6",
+                color: "white",
+                padding: "12px 24px",
+                borderRadius: "8px",
+                display: "inline-block",
+                fontWeight: "500",
+              }}
+            >
+              {isUploading ? "📤 Processing..." : "📁 Choose CSV File"}
             </label>
-            
+
             {uploadProgress && (
-              <p style={{ marginTop: '10px', color: '#3b82f6', fontSize: '14px' }}>
+              <p
+                style={{
+                  marginTop: "10px",
+                  color: "#3b82f6",
+                  fontSize: "14px",
+                }}
+              >
                 ⏳ {uploadProgress}
               </p>
             )}
-            
-            <p style={{ marginTop: '10px', color: '#6b7280', fontSize: '14px' }}>
-              Upload a CSV file with earthquake data. Expected columns: date, magnitude, location, depth, latitude, longitude, description
+
+            <p
+              style={{ marginTop: "10px", color: "#6b7280", fontSize: "14px" }}
+            >
+              Upload a CSV file with earthquake data. Expected columns: date,
+              magnitude, location, depth, latitude, longitude, description
             </p>
-            
-            <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#e0f2fe', borderRadius: '6px', textAlign: 'left' }}>
-              <p style={{ margin: '0 0 8px 0', fontWeight: '600', color: '#0277bd' }}>📋 CSV Format Example:</p>
-              <code style={{ fontSize: '12px', color: '#01579b' }}>
-                date,magnitude,location,depth,latitude,longitude,description<br/>
-                2024-01-15,5.2,Luzon,10.5,15.2,120.5,Strong earthquake<br/>
+
+            <div
+              style={{
+                marginTop: "15px",
+                padding: "10px",
+                backgroundColor: "#e0f2fe",
+                borderRadius: "6px",
+                textAlign: "left",
+              }}
+            >
+              <p
+                style={{
+                  margin: "0 0 8px 0",
+                  fontWeight: "600",
+                  color: "#0277bd",
+                }}
+              >
+                📋 CSV Format Example:
+              </p>
+              <code style={{ fontSize: "12px", color: "#01579b" }}>
+                date,magnitude,location,depth,latitude,longitude,description
+                <br />
+                2024-01-15,5.2,Luzon,10.5,15.2,120.5,Strong earthquake
+                <br />
                 2024-01-16,4.8,Mindanao,8.2,7.1,125.6,Moderate tremor
               </code>
             </div>
           </div>
         </div>
 
-        {/* Add New Entry Form */}
-        <div className="dashboard-form-container">
-          <h3 className="dashboard-subsection-title">
-            Add New Earthquake Entry
-          </h3>
-          
-          <form onSubmit={addEarthquakeEntry} className="dashboard-form">
-            <div className="dashboard-form-grid">
-              <div className="dashboard-input-group">
-                <label className="dashboard-input-label">Date</label>
-                <input
-                  type="date"
-                  name="date"
-                  value={newEntry.date}
-                  onChange={handleInputChange}
-                  className="dashboard-input"
-                  required
-                />
-              </div>
-              <div className="dashboard-input-group">
-                <label className="dashboard-input-label">Magnitude</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  name="magnitude"
-                  value={newEntry.magnitude}
-                  onChange={handleInputChange}
-                  className="dashboard-input"
-                  placeholder="5.2"
-                  required
-                />
-              </div>
-              <div className="dashboard-input-group">
-                <label className="dashboard-input-label">Location</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={newEntry.location}
-                  onChange={handleInputChange}
-                  className="dashboard-input"
-                  placeholder="Luzon"
-                  required
-                />
-              </div>
-              <div className="dashboard-input-group">
-                <label className="dashboard-input-label">Depth (km)</label>
-                <input
-                  type="number"
-                  name="depth"
-                  value={newEntry.depth}
-                  onChange={handleInputChange}
-                  className="dashboard-input"
-                  placeholder="10"
-                  required
-                />
-              </div>
-              <div className="dashboard-input-group">
-                <label className="dashboard-input-label">Latitude</label>
-                <input
-                  type="number"
-                  step="0.000001"
-                  name="latitude"
-                  value={newEntry.latitude}
-                  onChange={handleInputChange}
-                  className="dashboard-input"
-                  placeholder="15.2"
-                  required
-                />
-              </div>
-              <div className="dashboard-input-group">
-                <label className="dashboard-input-label">Longitude</label>
-                <input
-                  type="number"
-                  step="0.000001"
-                  name="longitude"
-                  value={newEntry.longitude}
-                  onChange={handleInputChange}
-                  className="dashboard-input"
-                  placeholder="120.5"
-                  required
-                />
-              </div>
-              <div className="dashboard-input-group">
-                <label className="dashboard-input-label">Description (Optional)</label>
-                <input
-                  type="text"
-                  name="description"
-                  value={newEntry.description}
-                  onChange={handleInputChange}
-                  className="dashboard-input"
-                  placeholder="Additional details about the earthquake"
-                />
-              </div>
-            </div>
-            <button 
-              type="submit" 
-              className="dashboard-add-btn"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Adding..." : "Add Entry"}
-            </button>
-          </form>
-        </div>
-
-        {/* Database Table */}
-        <div className="dashboard-table-container">
-          <h3 className="dashboard-subsection-title">
-            Current Database Entries ({earthquakeData.length} total)
-          </h3>
-          <div className="dashboard-table-wrapper">
-            {earthquakeData.length === 0 ? (
-              <div className="dashboard-empty-state">
-                <p>No earthquake entries found. Add your first entry above or upload a CSV file!</p>
-              </div>
-            ) : (
-              <table className="dashboard-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Magnitude</th>
-                    <th>Location</th>
-                    <th>Depth (km)</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {earthquakeData.map((entry) => (
-                    <tr key={entry.id}>
-                      <td>{entry.id}</td>
-                      <td>{entry.date || (entry.timestamp ? new Date(entry.timestamp).toLocaleDateString() : 'N/A')}</td>
-                      <td>{entry.magnitude}</td>
-                      <td>{entry.location}</td>
-                      <td>{entry.depth}</td>
-                      <td>{entry.latitude}</td>
-                      <td>{entry.longitude}</td>
-                      <td>{entry.description || '-'}</td>
-                      <td>
-                        <button
-                          onClick={() => deleteEntry(entry.id)}
-                          className="dashboard-delete-btn"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        </div>
-
         <div className="dashboard-disclaimer">
           <p>Disclaimer: For informational and research purposes only</p>
           <p>Data is stored in Supabase and updates in real-time</p>
-          <p>CSV files are uploaded to Supabase Storage and processed automatically</p>
+          <p>
+            CSV files are uploaded to Supabase Storage and processed
+            automatically
+          </p>
         </div>
       </div>
     </div>

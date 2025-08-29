@@ -30,8 +30,15 @@ const App = () => {
 
   return (
     <div>
-      {currentPage === 1 && <LoginPage navigateToPage={navigateToPage} onLoginSuccess={handleLoginSuccess} />}
-      {currentPage === 2 && <Dashboard navigateToPage={navigateToPage} onLogout={handleLogout} />}
+      {currentPage === 1 && (
+        <LoginPage
+          navigateToPage={navigateToPage}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
+      {currentPage === 2 && (
+        <Dashboard navigateToPage={navigateToPage} onLogout={handleLogout} />
+      )}
       {currentPage === 3 && (
         <LandingPage navigateToPage={navigateToPage} isLoggedIn={isLoggedIn} />
       )}
