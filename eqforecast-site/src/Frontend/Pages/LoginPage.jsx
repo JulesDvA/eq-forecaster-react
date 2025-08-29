@@ -20,14 +20,11 @@ const LoginPage = ({ navigateToPage, onLoginSuccess }) => {
     setError(null);
 
     try {
-      console.log('🔐 Attempting login...');
       const { user } = await signIn(username, password);
       
-      console.log('✅ Login successful:', user.email);
       onLoginSuccess(user);
       
     } catch (error) {
-      console.error('❌ Login failed:', error);
       setError(error.message || "Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
