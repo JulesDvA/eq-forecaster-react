@@ -4,8 +4,6 @@ import Papa from 'papaparse';
 // Upload CSV file to Supabase Storage
 export const uploadCSVToStorage = async (file) => {
   try {
-    console.log('📁 Uploading CSV to Supabase Storage:', file.name);
-    
     // Create unique filename
     const timestamp = Date.now();
     const fileName = `${timestamp}_${file.name}`;
@@ -17,11 +15,8 @@ export const uploadCSVToStorage = async (file) => {
       .upload(filePath, file);
     
     if (error) {
-      console.error('❌ Storage upload error:', error);
       throw new Error(`Storage upload failed: ${error.message}`);
     }
-    
-    console.log('✅ CSV uploaded to storage successfully:', data.path);
     
     // Get public URL
     const { data: urlData } = supabase.storage
@@ -37,7 +32,6 @@ export const uploadCSVToStorage = async (file) => {
     };
     
   } catch (error) {
-    console.error('❌ Error in uploadCSVToStorage:', error);
     throw error;
   }
 };
@@ -45,25 +39,20 @@ export const uploadCSVToStorage = async (file) => {
 // Parse CSV content and extract earthquake data
 export const parseCSVContent = async (file) => {
   try {
-    console.log('📊 Parsing CSV content...');
-    
     return new Promise((resolve, reject) => {
       Papa.parse(file, {
         header: true,
         skipEmptyLines: true,
         complete: (results) => {
-          console.log('✅ CSV parsed successfully:', results.data.length, 'rows');
           resolve(results.data);
         },
         error: (error) => {
-          console.error('❌ CSV parsing error:', error);
           reject(new Error(`CSV parsing failed: ${error.message}`));
         }
       });
     });
     
   } catch (error) {
-    console.error('❌ Error in parseCSVContent:', error);
     throw error;
   }
 };
@@ -71,8 +60,6 @@ export const parseCSVContent = async (file) => {
 // Process CSV data and add earthquakes to database
 export const processCSVData = async (csvData) => {
   try {
-    console.log('🔄 Processing CSV data...');
-    
     const processedData = [];
     const errors = [];
     
@@ -101,7 +88,7 @@ export const processCSVData = async (csvData) => {
         
         // Validate numeric values
         if (isNaN(earthquakeData.magnitude) || isNaN(earthquakeData.depth) || 
-            isNaN(earthquakeData.latitude) || isNaN(earthquakeData.longitude)) {
+            isNaN(earthquakeData.magnitude) || isNaN(earthquakeData.longitude)) {
           errors.push(`Row ${rowNumber}: Invalid numeric values`);
           continue;
         }
@@ -124,8 +111,6 @@ export const processCSVData = async (csvData) => {
       }
     }
     
-    console.log(`✅ Processed ${processedData.length} valid rows, ${errors.length} errors`);
-    
     return {
       validData: processedData,
       errors: errors,
@@ -133,7 +118,6 @@ export const processCSVData = async (csvData) => {
     };
     
   } catch (error) {
-    console.error('❌ Error in processCSVData:', error);
     throw error;
   }
 };
@@ -141,19 +125,14 @@ export const processCSVData = async (csvData) => {
 // Upload CSV and process data in one function
 export const uploadAndProcessCSV = async (file) => {
   try {
-    console.log('🚀 Starting CSV upload and processing...');
-    
     // Step 1: Upload to storage
     const storageResult = await uploadCSVToStorage(file);
-    console.log('📁 File uploaded to storage:', storageResult.fileName);
     
     // Step 2: Parse CSV content
     const csvData = await parseCSVContent(file);
-    console.log('📊 CSV parsed:', csvData.length, 'rows');
     
     // Step 3: Process and validate data
     const processedResult = await processCSVData(csvData);
-    console.log('✅ Data processed:', processedResult.validData.length, 'valid rows');
     
     return {
       storage: storageResult,
@@ -167,7 +146,6 @@ export const uploadAndProcessCSV = async (file) => {
     };
     
   } catch (error) {
-    console.error('❌ Error in uploadAndProcessCSV:', error);
     throw error;
   }
 };

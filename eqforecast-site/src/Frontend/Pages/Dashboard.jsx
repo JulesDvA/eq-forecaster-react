@@ -45,12 +45,10 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
         }
         
         setCurrentUser(user);
-        console.log('✅ User authenticated:', user.email);
         
         const earthquakes = await getEarthquakes();
         setEarthquakeData(earthquakes);
       } catch (error) {
-        console.error('❌ Error loading earthquakes:', error);
         setError('Failed to load earthquake data: ' + error.message);
       } finally {
         setLoading(false);
@@ -61,8 +59,6 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
 
     // Set up real-time subscription
     const unsubscribe = subscribeToEarthquakes((payload) => {
-      console.log('🔄 Real-time update:', payload);
-      
       if (payload.eventType === 'INSERT') {
         setEarthquakeData(prev => [payload.new, ...prev]);
       } else if (payload.eventType === 'DELETE') {
@@ -97,13 +93,11 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
     setUploadProgress('Starting upload...');
 
     try {
-      console.log('📁 Processing CSV file:', file.name);
       setUploadProgress('Uploading to Supabase Storage...');
       
       // Upload and process CSV
       const result = await uploadAndProcessCSV(file);
       
-      console.log('✅ CSV processing complete:', result);
       setUploadProgress('Adding earthquake entries to database...');
       
       // Add valid earthquake entries to database
@@ -115,7 +109,6 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
           await addEarthquake(earthquake);
           addedCount++;
         } catch (error) {
-          console.error('❌ Error adding earthquake:', error);
           errorCount++;
         }
       }
@@ -145,14 +138,12 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
 
   const addEarthquakeEntry = async (e) => {
     e.preventDefault();
-    console.log('📝 Form submitted with data:', newEntry);
     
     // Check required fields
     const requiredFields = ['date', 'magnitude', 'location', 'depth', 'latitude', 'longitude'];
     const hasAllRequired = requiredFields.every(field => newEntry[field] !== "");
     
     if (hasAllRequired) {
-      console.log('✅ All required fields filled, proceeding...');
       setIsSubmitting(true);
       setError(null);
       
@@ -166,15 +157,12 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
           timestamp: new Date(newEntry.date).toISOString()
         };
 
-        console.log('🚀 Calling addEarthquake service with:', earthquakeData);
         await addEarthquake(earthquakeData);
         
-        console.log('✅ Earthquake added successfully, resetting form...');
         // Reset form
         setNewEntry({
           date: "",
           magnitude: "",
-          location: "",
           depth: "",
           latitude: "",
           longitude: "",
@@ -185,13 +173,11 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
         alert("Earthquake entry added successfully!");
         
       } catch (error) {
-        console.error('❌ Error in addEarthquakeEntry:', error);
         setError("Failed to add earthquake entry: " + error.message);
       } finally {
         setIsSubmitting(false);
       }
     } else {
-      console.log('❌ Some required fields are empty:', newEntry);
       setError("Please fill in all required fields.");
     }
   };
@@ -211,10 +197,8 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
   const logout = async () => {
     try {
       await signOut();
-      console.log('✅ Logged out successfully');
       onLogout(); // Use the parent logout handler
     } catch (error) {
-      console.error('❌ Logout error:', error);
       // Still logout even if signOut fails
       onLogout();
     }
@@ -315,7 +299,6 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
             <button 
               onClick={async () => {
                 try {
-                  console.log('🧪 Testing Supabase connection...');
                   const isConnected = await testSupabaseConnection();
                   if (isConnected) {
                     alert('✅ Supabase connection successful!');
@@ -323,7 +306,6 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
                     alert('❌ Supabase connection failed. Check your configuration.');
                   }
                 } catch (error) {
-                  console.error('❌ Test failed:', error);
                   alert('❌ Supabase connection test failed: ' + error.message);
                 }
               }}

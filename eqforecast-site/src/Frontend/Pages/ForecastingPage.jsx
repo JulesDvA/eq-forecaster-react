@@ -51,14 +51,11 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
   useEffect(() => {
     const fetchAvailableYears = async () => {
       try {
-        console.log("Fetching available years from Supabase forecasts table...");
-        
         const { data, error } = await supabase
           .from('forecasts')
           .select('year');
         
         if (error) {
-          console.error("Error fetching available years:", error);
           return;
         }
         
@@ -66,21 +63,15 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
         const uniqueYears = [...new Set(data.map(record => record.year))].sort();
         setAvailableYears(uniqueYears);
         
-        console.log("Available years:", uniqueYears);
-        console.log(`📈 Total years available: ${uniqueYears.length}`);
-        console.log(`🎯 Year range: ${Math.min(...uniqueYears)} - ${Math.max(...uniqueYears)}`);
-        
         // Default to 2025 if available, otherwise use the latest available year
         if (uniqueYears.includes(2025)) {
           setSelectedYear(2025);
-          console.log("✅ Set default year to 2025");
         } else if (uniqueYears.length > 0) {
           setSelectedYear(uniqueYears[uniqueYears.length - 1]);
-          console.log(`✅ Set default year to ${uniqueYears[uniqueYears.length - 1]}`);
         }
         
       } catch (error) {
-        console.error("Error fetching available years:", error);
+        // Handle error silently
       }
     };
 
@@ -92,46 +83,36 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
     const fetchForecastData = async () => {
       if (!selectedYear) return;
       
-      try {
-        setForecastLoading(true);
-        console.log(`🔍 Fetching forecast data from Supabase forecasts table for year ${selectedYear}...`);
-        
-        const { data, error } = await supabase
-          .from('forecasts')
-          .select('bin_id, year, forecast_frequency, forecast_max_mag')
-          .eq('year', selectedYear)
-          .order('bin_id');
-        
-        if (error) {
-          console.error("❌ Error fetching forecast data:", error);
+              try {
+          setForecastLoading(true);
+          
+          const { data, error } = await supabase
+            .from('forecasts')
+            .select('bin_id, year, forecast_frequency, forecast_max_mag')
+            .eq('year', selectedYear)
+            .order('bin_id');
+          
+          if (error) {
+            setError("Failed to fetch forecast data");
+            return;
+          }
+          
+          // Convert to a map for easy lookup using numeric bin IDs
+          const forecastMap = {};
+          data.forEach(forecast => {
+            // Use numeric bin_id as key (e.g., "0" -> 0, "1" -> 1)
+            const numericId = parseInt(forecast.bin_id);
+            forecastMap[numericId] = forecast;
+          });
+          
+          setForecastData(forecastMap);
+          setError(null);
+          
+        } catch (error) {
           setError("Failed to fetch forecast data");
-          return;
+        } finally {
+          setForecastLoading(false);
         }
-        
-        console.log(`✅ Forecast data for ${selectedYear}:`, data);
-        console.log(`📊 Total records found:`, data.length);
-        
-        // Convert to a map for easy lookup using numeric bin IDs
-        const forecastMap = {};
-        data.forEach(forecast => {
-          // Use numeric bin_id as key (e.g., "0" -> 0, "1" -> 1)
-          const numericId = parseInt(forecast.bin_id);
-          forecastMap[numericId] = forecast;
-          console.log(`🔄 Mapping: "${forecast.bin_id}" -> ${numericId} (freq: ${forecast.forecast_frequency}, mag: ${forecast.forecast_max_mag})`);
-        });
-        
-        console.log(`🎯 Final forecast map:`, forecastMap);
-        console.log(`📋 Available bin IDs:`, Object.keys(forecastMap));
-        
-        setForecastData(forecastMap);
-        setError(null);
-        
-      } catch (error) {
-        console.error("❌ Error fetching forecast data:", error);
-        setError("Failed to fetch forecast data");
-      } finally {
-        setForecastLoading(false);
-      }
     };
 
     fetchForecastData();
@@ -164,7 +145,7 @@ const ForecastPage = ({ navigateToPage, isLoggedIn }) => {
   };
 
   const handleYearSubmit = () => {
-    console.log("Generating forecast for year:", inputYear);
+    // Handle year submission
   };
 
   // Fix for default markers
