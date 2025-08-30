@@ -8,7 +8,7 @@ import HotlinePage from "./Frontend/Pages/HotlinePage";
 import ForecastPage from "./Frontend/Pages/ForecastingPage";
 
 const App = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(3); // Changed from 1 to 3 (LandingPage)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -25,7 +25,7 @@ const App = () => {
   const handleLogout = () => {
     setCurrentUser(null);
     setIsLoggedIn(false);
-    setCurrentPage(1); // Go back to Landing Page
+    setCurrentPage(3); // Go back to Landing Page instead of Login
   };
 
   return (

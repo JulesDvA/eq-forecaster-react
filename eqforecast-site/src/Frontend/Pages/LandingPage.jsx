@@ -60,14 +60,12 @@ const LandingPage = ({ navigateToPage, isLoggedIn }) => {
             >
               Forecast Now
             </button>
-            {isLoggedIn && (
-              <button
-                onClick={() => navigateToPage(2)}
-                className="landing-page-admin-btn"
-              >
-                Admin
-              </button>
-            )}
+            <button
+              onClick={() => navigateToPage(1)}
+              className="landing-page-admin-btn"
+            >
+              Admin
+            </button>
           </div>
         </div>
       </div>

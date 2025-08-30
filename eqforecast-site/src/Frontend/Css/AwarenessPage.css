@@ -101,7 +101,7 @@
 
 /* Admin Button */
 .awareness-page-admin-btn {
-  background-color: #dc2626;
+  background-color: #f97316;
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
@@ -112,7 +112,7 @@
 }
 
 .awareness-page-admin-btn:hover {
-  background-color: #b91c1c;
+  background-color: #ea580c;
 }
 
 /* Hero Section */
