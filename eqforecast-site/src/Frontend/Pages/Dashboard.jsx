@@ -7,7 +7,6 @@ import {
   subscribeToEarthquakes,
   getEarthquakes,
 } from "../services/earthquakeService";
-import { testSupabaseConnection } from "../supabase";
 import { uploadAndProcessCSV } from "../services/csvUploadService";
 import { signOut, getCurrentUser } from "../services/authService";
 
@@ -301,53 +300,7 @@ const Dashboard = ({ navigateToPage, onLogout }) => {
           </div>
         )}
 
-        {/* Test Supabase Connection */}
-        <div className="dashboard-form-container">
-          <h3 className="dashboard-subsection-title">
-            🧪 Test Supabase Connection
-          </h3>
 
-          <div
-            style={{
-              marginBottom: "20px",
-              padding: "10px",
-              backgroundColor: "#f0f9ff",
-              borderRadius: "8px",
-            }}
-          >
-            <button
-              onClick={async () => {
-                try {
-                  const isConnected = await testSupabaseConnection();
-                  if (isConnected) {
-                    alert("✅ Supabase connection successful!");
-                  } else {
-                    alert(
-                      "❌ Supabase connection failed. Check your configuration."
-                    );
-                  }
-                } catch (error) {
-                  alert("❌ Supabase connection test failed: " + error.message);
-                }
-              }}
-              style={{
-                backgroundColor: "#10b981",
-                color: "white",
-                border: "none",
-                padding: "8px 16px",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              🧪 Test Supabase Connection
-            </button>
-            <span
-              style={{ marginLeft: "10px", fontSize: "14px", color: "#6b7280" }}
-            >
-              Click this to test if Supabase is working
-            </span>
-          </div>
-        </div>
 
         {/* CSV Upload Section */}
         <div className="dashboard-form-container">

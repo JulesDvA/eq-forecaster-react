@@ -36,8 +36,28 @@ const LoginPage = ({ navigateToPage, onLoginSuccess }) => {
     navigateToPage(3);
   };
 
+  const goBackToLanding = () => {
+    navigateToPage(3);
+  };
+
   return (
     <div className="login-page-container">
+      {/* Back Button */}
+      <button
+        onClick={goBackToLanding}
+        className="login-page-back-btn"
+        title="Go back to landing page"
+      >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+
       <div className="login-page-content">
         <div className="login-page-form-container">
           <h1 className="login-page-title">Login</h1>
