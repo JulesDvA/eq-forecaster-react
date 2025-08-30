@@ -72,40 +72,30 @@ const AboutPage = ({ navigateToPage, isLoggedIn }) => {
 
       <div className="about-page-main-content">
         {/* About the model section */}
-        <h1 className="about-page-title">About the model</h1>
+        <h1 className="about-page-title">About the Model</h1>
 
         <div className="about-page-model-section">
           <div className="about-page-model-content">
             <div className="about-page-model-text">
               <h2 className="about-page-section-title">
-                Earthquake Forecasting
+                Long Short-Term Memory (LSTM) Networks
               </h2>
               <p className="about-page-section-paragraph">
-                Earthquake forecasting looks at past earthquake records to find
-                patterns that can help us understand future risks. While it
-                cannot predict the exact time or place of the next quake, it can
-                show which areas are more likely to experience stronger or more
-                frequent earthquakes.
+                Long Short-Term Memory (LSTM) networks are a type of recurrent neural network (RNN) built to model sequential data. Since earthquakes follow complex time-based patterns, LSTM is well-suited for analyzing how past seismic events shape future ones.
+
               </p>
               <p className="about-page-section-paragraph">
-                These forecasts give communities, leaders, and disaster agencies
-                useful information to prepare better, strengthen safety plans,
-                and reduce the damage caused by future quakes.
+                In our system, we use a pure LSTM model to forecast the maximum annual earthquake magnitude per region. This focuses on identifying the strongest possible seismic events, helping provide a clearer picture of potential hazards each year.
               </p>
 
               <h2 className="about-page-section-title">
-                Rule-Based Classification Algorithm
+                Attention - LSTM
               </h2>
               <p className="about-page-section-paragraph">
-                To make earthquake data easier to understand, we use a
-                rule-based system that groups earthquakes based on where they
-                happen. Instead of using political or city boundaries, the
-                system divides areas using their actual earthquake activity.
+                While LSTM captures time-based dependencies, it does not always distinguish which past events matter most. To address this, we integrate an Attention Mechanism—a technique that allows the model to prioritize significant seismic signals while minimizing less relevant ones.
               </p>
               <p className="about-page-section-paragraph">
-                This makes it possible to identify high-risk zones more
-                accurately, helping disaster planners and communities focus on
-                the areas that need the most attention.
+                This enhanced Attention-LSTM model is applied to forecast annual earthquake frequency. By highlighting critical patterns in earthquake history, the attention mechanism strengthens the model’s ability to recognize recurring seismic activity and improves forecasting accuracy compared to standard LSTM
               </p>
 
               <h2 className="about-page-section-title">
@@ -122,6 +112,16 @@ const AboutPage = ({ navigateToPage, isLoggedIn }) => {
                 which areas are at higher risk in the future. The goal is to
                 provide easy-to-understand forecasts that help people,
                 communities, and decision-makers stay safer and more prepared.
+              </p>
+
+              <h2 className="about-page-section-title">
+                Quadtree Spatial Binning
+              </h2>
+              <p className="about-page-section-paragraph">
+                Earthquake activity in the Philippines is uneven—some regions experience frequent seismic events, while others remain relatively quiet. To capture this, we applied Quadtree-based Spatial Binning, an adaptive method that divides the country into smaller regions or “bins” depending on earthquake density.
+              </p>
+              <p className="about-page-section-paragraph">
+                Active zones are represented with finer bins, while low-activity areas are grouped into larger bins. After merging, these bins form static spatial zones used by the models. In simple terms, bins act as statistical containers that balance earthquake distribution across regions, making forecasts more reliable and region-specific.
               </p>
             </div>
 
