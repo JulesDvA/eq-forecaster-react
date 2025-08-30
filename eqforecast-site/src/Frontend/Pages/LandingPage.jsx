@@ -72,7 +72,7 @@ const LandingPage = ({ navigateToPage, isLoggedIn }) => {
 
       {/* Main Hero Section */}
       <div className="landing-page-hero-section">
-        <h1 className="landing-page-hero-title">OPAL Earthquake Forecasting</h1>
+        <h1 className="landing-page-hero-title">Earthquake Forecasting</h1>
         <p className="landing-page-hero-subtitle">
           Earthquake Forecasting in the Philippines Modelling Attention-Driven
           LSTM
