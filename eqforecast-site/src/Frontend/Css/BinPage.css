@@ -14,6 +14,7 @@
   font-weight: 500;
   display: inline-block;
   white-space: nowrap;
+  word-break: break-word;
 }
 
 /* No Results */
@@ -62,26 +63,28 @@
   .bin-page-content {
     padding: 24px 16px;
   }
-  
+
   .bin-page-controls {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .bin-page-search-container {
     max-width: none;
   }
-  
+
   .bin-page-stats {
     justify-content: center;
   }
-  
+
   .bin-page-table-container {
-    overflow-x: auto;
+    overflow-x: auto; /* allow scrolling */
+    -webkit-overflow-scrolling: touch;
   }
-  
+
   .bin-page-table {
-    min-width: 800px;
+    width: 100%;
+    min-width: 700px; /* reduced from 800px for better fit */
   }
 }
 
@@ -91,69 +94,72 @@
     gap: 12px;
     text-align: center;
   }
-  
+
   .bin-page-back-btn {
     left: 16px;
     top: 16px;
     transform: none;
     position: absolute;
   }
-  
+
   .bin-page-header {
     padding: 60px 16px 16px;
   }
-  
+
   .bin-page-logo {
     font-size: 20px;
   }
-  
+
   .bin-page-nav-menu {
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
     font-size: 12px;
   }
-  
+
   .bin-page-title {
     font-size: 24px;
   }
-  
+
   .bin-page-subtitle {
     font-size: 14px;
   }
-  
+
   .bin-page-content {
     padding: 20px 12px;
   }
-  
+
   .bin-page-controls {
     margin-bottom: 24px;
   }
-  
+
   .bin-page-stats {
     gap: 16px;
   }
-  
+
   .bin-page-stat-number {
     font-size: 20px;
   }
-  
-  .bin-page-table th,
-  .bin-page-table td {
-    padding: 12px 16px;
-    font-size: 12px;
+
+  .bin-page-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  
+
   .bin-page-table {
-    min-width: 900px;
+    width: 100%;
+    min-width: 650px; /* reduced from 900px */
+    table-layout: auto;
   }
-  
+
   .bin-page-bounds-cell {
     min-width: 180px;
   }
-  
+
   .bin-page-locations-cell {
-    max-width: 250px;
+    max-width: 220px; /* slightly smaller */
+    white-space: normal; /* allow wrapping */
+    word-break: break-word;
   }
 }
 
@@ -162,84 +168,89 @@
     gap: 8px;
     font-size: 11px;
   }
-  
-  .bin-page-nav-item, 
-  .bin-page-bins-btn, 
+
+  .bin-page-nav-item,
+  .bin-page-bins-btn,
   .bin-page-admin-btn {
     padding: 6px 8px;
     font-size: 11px;
   }
-  
+
   .bin-page-title {
     font-size: 20px;
   }
-  
+
   .bin-page-subtitle {
     font-size: 13px;
   }
-  
+
   .bin-page-content {
     padding: 16px 8px;
   }
-  
+
   .bin-page-search-input {
     padding: 10px 12px 10px 36px;
     font-size: 13px;
   }
-  
+
   .bin-page-search-icon {
     width: 16px;
     height: 16px;
     left: 10px;
   }
-  
+
   .bin-page-stat-number {
     font-size: 18px;
   }
-  
+
   .bin-page-stat-label {
     font-size: 11px;
   }
-  
+
   .bin-page-table th,
   .bin-page-table td {
     padding: 10px 12px;
     font-size: 11px;
   }
-  
+
   .bin-page-bin-id {
     font-size: 10px;
     padding: 3px 6px;
   }
-  
+
   .bin-page-bounds-grid {
     font-size: 10px;
   }
-  
+
   .bin-page-coord {
     font-size: 10px;
   }
-  
+
   .bin-page-dimensions {
     font-size: 10px;
     padding: 3px 6px;
   }
-  
+
   .bin-page-location-tag {
     font-size: 10px;
     padding: 1px 6px;
+    white-space: normal; /* let tags wrap */
+    word-break: break-word;
   }
-  
+
   .bin-page-info-note {
     padding: 16px;
     font-size: 13px;
     gap: 12px;
   }
-  
+
   .bin-page-note-icon {
     font-size: 18px;
   }
-}-container {
+}
+
+/* Container */
+.bin-page-container {
   min-height: 100vh;
   background-color: #f8fafc;
   font-family: Inter, Sans-serif;
@@ -469,12 +480,15 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   margin-bottom: 32px;
   font-family: Inter, Sans-serif;
+  overflow-x: auto; /* allow scroll always */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Table Styles */
 .bin-page-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 700px; /* ensures columns don’t squish too much */
 }
 
 .bin-page-table th {
@@ -581,6 +595,6 @@
 
 .bin-page-locations-cell {
   max-width: 300px;
+  word-break: break-word;
+  white-space: normal; 
 }
-
-.bin-page
